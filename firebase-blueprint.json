@@ -1,0 +1,144 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User account and membership record",
+      "type": "object",
+      "properties": {
+        "membership_id": { "type": "string" },
+        "nom_complet": { "type": "string" },
+        "email": { "type": "string" },
+        "telephone": { "type": "string" },
+        "role": { "type": "string" },
+        "status": { "type": "string" },
+        "cotisation_status": { "type": "string" },
+        "quartier": { "type": "string" },
+        "photo_profil": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["email", "nom_complet", "role"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "Community projects and association initiatives",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "status": { "type": "string" },
+        "progress": { "type": "number" },
+        "budget": { "type": "string" },
+        "beneficiaries": { "type": "string" },
+        "leader": { "type": "string" },
+        "start_date": { "type": "string" },
+        "end_date": { "type": "string" },
+        "description": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["title", "category", "status"]
+    },
+    "Article": {
+      "title": "Article",
+      "description": "News, updates, and educational articles",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "slug": { "type": "string" },
+        "category": { "type": "string" },
+        "summary": { "type": "string" },
+        "content": { "type": "string" },
+        "image": { "type": "string" },
+        "published": { "type": "boolean" },
+        "date": { "type": "string" }
+      },
+      "required": ["title", "content"]
+    },
+    "Workshop": {
+      "title": "Workshop",
+      "description": "Educational training sessions and youth workshops",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "date": { "type": "string" },
+        "time": { "type": "string" },
+        "location": { "type": "string" },
+        "capacity": { "type": "number" },
+        "description": { "type": "string" },
+        "instructor": { "type": "string" }
+      },
+      "required": ["title", "date", "location"]
+    },
+    "HonoraryMember": {
+      "title": "HonoraryMember",
+      "description": "Honorary council and distinguished patrons of the association",
+      "type": "object",
+      "properties": {
+        "nom_complet": { "type": "string" },
+        "titre": { "type": "string" },
+        "description": { "type": "string" },
+        "photo": { "type": "string" },
+        "date_nomination": { "type": "string" }
+      },
+      "required": ["nom_complet", "titre"]
+    },
+    "Proposal": {
+      "title": "Proposal",
+      "description": "Community ideas and member project submissions",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "author_name": { "type": "string" },
+        "author_email": { "type": "string" },
+        "category": { "type": "string" },
+        "description": { "type": "string" },
+        "status": { "type": "string" },
+        "created_at": { "type": "string" }
+      },
+      "required": ["title", "author_name", "description"]
+    },
+    "ContactMessage": {
+      "title": "ContactMessage",
+      "description": "Inquiries submitted through the contact form",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "subject": { "type": "string" },
+        "message": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["name", "email", "message"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile storage with role and authorization attributes"
+    },
+    "/projects/{projectId}": {
+      "schema": "Project",
+      "description": "Strategic projects and community initiatives"
+    },
+    "/articles/{articleId}": {
+      "schema": "Article",
+      "description": "Official news publications and articles"
+    },
+    "/workshops/{workshopId}": {
+      "schema": "Workshop",
+      "description": "Youth and member skill development workshops"
+    },
+    "/honorary_members/{memberId}": {
+      "schema": "HonoraryMember",
+      "description": "Honorary council profiles and achievements"
+    },
+    "/proposals/{proposalId}": {
+      "schema": "Proposal",
+      "description": "Proposals and initiatives suggested by citizens and members"
+    },
+    "/contact_messages/{messageId}": {
+      "schema": "ContactMessage",
+      "description": "Messages sent to the association administration"
+    }
+  }
+}

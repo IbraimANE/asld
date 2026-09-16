@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="<%= lang.lang_code %>" dir="<%= lang.direction %>">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= currentLang === 'en' ? 'Dashboard - Association Management' : (currentLang === 'fr' ? 'Tableau de Bord - Administration' : 'لوحة التحكم - إدارة الجمعية') %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            blue: '#122a4e',
+                            green: '#4AB76B',
+                            yellow: '#f59e0b'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/custom.css">
+    <style>
+        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; }
+        @media print {
+            body { background: white !important; }
+            nav, footer, .admin-tab-btn, #btn-tab-card-sample, button, #specimen-member-selector { display: none !important; }
+            body * { visibility: hidden; }
+            #card-print-area, #card-print-area * { visibility: visible; }
+            #card-print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 20px !important;
+                padding: 20px !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-gray-950 text-gray-800 dark:text-gray-100 transition-colors">
+
+    <nav class="bg-[#122a4e] text-white py-4 px-6 shadow-xl sticky top-0 z-50">
+        <div class="container mx-auto flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center gap-4">
+                <a href="/index.php">
+                    <img src="/image/logo_assoc.jpg" class="h-12 w-auto rounded-xl bg-white p-0.5 shadow-sm" alt="Logo">
+                </a>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-black tracking-wide"><%= currentLang === 'en' ? 'Administrative Center' : (currentLang === 'fr' ? 'Administration Centrale' : 'المركز الإداري للجمعية') %></h1>
+                    <p class="text-[11px] text-blue-200">جمعية مبادرات بلا حدود - دار الشباب دروة</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="/admin/export-csv" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl font-bold transition text-xs flex items-center gap-1.5 shadow">
+                    📥 <span>تصدير Excel / CSV</span>
+                </a>
+                <a href="/admin_articles.php" class="bg-indigo-700/80 px-4 py-2 rounded-xl font-bold hover:bg-indigo-600 transition text-xs flex items-center gap-1.5">
+                    📄 <span><%= currentLang === 'en' ? 'Moderate Articles' : 'مراجعة المقالات' %></span>
+                    <% const pendingArticlesCount = articles.filter(a => a.status === 'en_attente').length; %>
+                    <% if (pendingArticlesCount > 0) { %>
+                        <span class="bg-yellow-400 text-blue-950 px-2 py-0.5 rounded-full text-[10px] font-black"><%= pendingArticlesCount %></span>
+                    <% } %>
+                </a>
+                <a href="/index.php" class="bg-white/10 px-3 py-2 rounded-xl font-bold hover:bg-white/20 transition text-xs"><%= lang.nav_home %></a>
+                <a href="/logout.php" class="bg-red-500 px-3 py-2 rounded-xl font-bold hover:bg-red-600 transition text-xs"><%= lang.logout %></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto py-10 px-6">
+        
+        <!-- Flash Alert -->
+        <% if (locals.notice) { %>
+            <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 mb-8 rounded-2xl font-bold text-center">
+                ✅ <%= notice %>
+            </div>
+        <% } %>
+
+        <!-- Admin Profile Header Banner -->
+        <div class="bg-gradient-to-r from-[#122a4e] via-[#173763] to-[#0c1f38] text-white p-6 md:p-8 rounded-3xl shadow-xl mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border border-blue-900/50">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-yellow-500 text-blue-950 font-black text-xl flex items-center justify-center shadow-lg">
+                    IA
+                </div>
+                <div>
+                    <div class="flex flex-wrap items-center gap-2.5">
+                        <h2 class="text-xl md:text-2xl font-black">
+                            <%= locals.currentUser ? currentUser.nom_complet : 'إبراهيم أيت الديمان' %>
+                        </h2>
+                        <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 text-[11px] font-black px-3 py-0.5 rounded-full flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                            مدير النظام العام (Super Admin)
+                        </span>
+                        <span class="bg-orange-500/25 text-orange-200 border border-orange-400/40 text-[11px] font-black px-3 py-0.5 rounded-full flex items-center gap-1.5">
+                            🔥 مصادق عبر Firebase Authentication
+                        </span>
+                        <span class="bg-blue-500/25 text-cyan-200 border border-cyan-400/40 text-[11px] font-black px-3 py-0.5 rounded-full flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                            ☁️ قاعدة بيانات Google Cloud Firestore (نشطة ومؤمنة)
+                        </span>
+                    </div>
+                    <p class="text-xs text-blue-200 mt-1 flex flex-wrap items-center gap-2 font-medium">
+                        <span>📧 <%= locals.currentUser ? currentUser.email : 'ibrahimaitaddimane@gmail.com' %></span>
+                        <span>•</span>
+                        <span>📍 دار الشباب دروة - جهة الدار البيضاء سطات</span>
+                        <span>•</span>
+                        <span>📅 <%= new Date().toLocaleDateString('ar-MA', { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+                    </p>
+                </div>
+            </div>
+            <div class="flex flex-wrap gap-2.5 items-center">
+                <span class="bg-white/10 backdrop-blur-md px-3.5 py-1.5 rounded-xl text-xs font-bold text-blue-100 flex items-center gap-1.5 border border-white/10">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    النظام الإداري نشط
+                </span>
+                <a href="/admin/export-csv" class="bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-blue-950 px-4 py-2 rounded-xl text-xs font-black transition shadow-md flex items-center gap-1.5">
+                    📥 <span>تصدير السجلات الشاملة</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- EXECUTIVE SUMMARY METRICS SECTION -->
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-10">
+            
+            <!-- PANEL 1: MEMBER REGISTRATIONS & FINANCIAL METRICS -->
+            <div class="bg-white dark:bg-gray-900 rounded-3xl p-6 md:p-7 shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-6 pb-3 border-b border-gray-100 dark:border-gray-800">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-9 h-9 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-900 dark:text-blue-300 flex items-center justify-center text-base font-black">👥</span>
+                            <div>
+                                <h3 class="font-black text-base text-blue-950 dark:text-white">مؤشرات تسجيل المنخرطين والاشتراكات</h3>
+                                <p class="text-[11px] text-gray-400">تتبع طلبات الانخراط، حالة المصادقة، والتحصيل المالي</p>
+                            </div>
+                        </div>
+                        <span class="text-xs font-black px-2.5 py-1 bg-blue-50 dark:bg-blue-950 text-blue-900 dark:text-blue-300 rounded-xl">دورة 2026</span>
+                    </div>
+
+                    <!-- 4 Mini Registration Metrics -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+                        <div class="bg-slate-50 dark:bg-gray-800/60 p-3.5 rounded-2xl border border-gray-100 dark:border-gray-700/60">
+                            <p class="text-[11px] font-bold text-gray-400">إجمالي الطلبات</p>
+                            <p class="text-2xl font-black text-blue-950 dark:text-white mt-0.5"><%= total_members %></p>
+                            <span class="text-[10px] text-blue-600 dark:text-blue-400 font-bold">100% مسجلين</span>
+                        </div>
+                        <div class="bg-amber-50/70 dark:bg-amber-950/30 p-3.5 rounded-2xl border border-amber-100 dark:border-amber-900/40">
+                            <p class="text-[11px] font-bold text-amber-700 dark:text-amber-400">قيد المراجعة</p>
+                            <p class="text-2xl font-black text-amber-600 mt-0.5"><%= pending_count %></p>
+                            <span class="text-[10px] text-amber-600 font-bold">تنتظر فحص CIN</span>
+                        </div>
+                        <div class="bg-emerald-50/70 dark:bg-emerald-950/30 p-3.5 rounded-2xl border border-emerald-100 dark:border-emerald-900/40">
+                            <p class="text-[11px] font-bold text-emerald-700 dark:text-emerald-400">أعضاء معتمدون</p>
+                            <p class="text-2xl font-black text-emerald-600 mt-0.5"><%= accepted_count %></p>
+                            <span class="text-[10px] text-emerald-600 font-bold">بطاقة مفعلة ✓</span>
+                        </div>
+                        <div class="bg-purple-50/70 dark:bg-purple-950/30 p-3.5 rounded-2xl border border-purple-100 dark:border-purple-900/40">
+                            <p class="text-[11px] font-bold text-purple-700 dark:text-purple-400">مداخيل الانخراط</p>
+                            <p class="text-2xl font-black text-purple-600 mt-0.5"><%= locals.total_cotisations || (paid_count * 100) %> <span class="text-xs">درهم</span></p>
+                            <span class="text-[10px] text-purple-600 font-bold"><%= locals.cotisation_rate || 0 %>% تحصيل</span>
+                        </div>
+                    </div>
+
+                    <!-- Progress & Quartier Breakdown -->
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-xs font-bold mb-1.5">
+                                <span class="text-gray-600 dark:text-gray-300">نسبة سداد واجبات الانخراط (100 درهم/عضو)</span>
+                                <span class="text-purple-600 font-black"><%= locals.paid_count || 0 %> مسدد / <%= locals.unpaid_count || 0 %> في الانتظار (<%= locals.cotisation_rate || 0 %>%)</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full transition-all duration-500" style="width: <%= Math.max(5, locals.cotisation_rate || 0) %>%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Quartiers Distribution Pills -->
+                        <div class="pt-2">
+                            <p class="text-[11px] font-bold text-gray-400 mb-2">التوزيع الجغرافي للمنخرطين بأحياء مدينة الدروة:</p>
+                            <div class="flex flex-wrap gap-1.5">
+                                <% if (locals.quartier_counts && Object.keys(quartier_counts).length > 0) { %>
+                                    <% Object.entries(quartier_counts).forEach(function([quartier, count]) { %>
+                                        <span class="text-[11px] font-bold bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-2.5 py-1 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center gap-1">
+                                            📍 <%= quartier %>: <strong class="text-blue-900 dark:text-yellow-400 font-black"><%= count %></strong>
+                                        </span>
+                                    <% }); %>
+                                <% } else { %>
+                                    <span class="text-xs text-gray-400">سجل الأحياء قيد التحديث</span>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL 2: PROJECT STATUSES & STRATEGIC ACTIVITIES METRICS -->
+            <div class="bg-white dark:bg-gray-900 rounded-3xl p-6 md:p-7 shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-6 pb-3 border-b border-gray-100 dark:border-gray-800">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-9 h-9 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center text-base font-black">🎯</span>
+                            <div>
+                                <h3 class="font-black text-base text-blue-950 dark:text-white">مؤشرات حالة المشاريع والأنشطة الميدانية</h3>
+                                <p class="text-[11px] text-gray-400">متابعة سير إنجاز الأنشطة الميدانية، الميزانيات، ونسب التقدم</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="switchAdminTab('tab-projects')" class="text-xs font-black text-blue-600 dark:text-yellow-400 hover:underline flex items-center gap-1">
+                            <span>إدارة المشاريع</span> <span>↗</span>
+                        </button>
+                    </div>
+
+                    <!-- 4 Project Status Metrics -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+                        <div class="bg-slate-50 dark:bg-gray-800/60 p-3.5 rounded-2xl border border-gray-100 dark:border-gray-700/60">
+                            <p class="text-[11px] font-bold text-gray-400">إجمالي المبادرات</p>
+                            <p class="text-2xl font-black text-blue-950 dark:text-white mt-0.5"><%= (locals.projects || []).length %></p>
+                            <span class="text-[10px] text-blue-600 dark:text-blue-400 font-bold">مشاريع معتمدة</span>
+                        </div>
+                        <div class="bg-blue-50/70 dark:bg-blue-950/30 p-3.5 rounded-2xl border border-blue-100 dark:border-blue-900/40">
+                            <p class="text-[11px] font-bold text-blue-700 dark:text-blue-400">قيد التنفيذ</p>
+                            <p class="text-2xl font-black text-blue-600 dark:text-blue-400 mt-0.5"><%= locals.active_projects_count || 0 %></p>
+                            <span class="text-[10px] text-blue-600 font-bold">أنشطة جارية</span>
+                        </div>
+                        <div class="bg-emerald-50/70 dark:bg-emerald-950/30 p-3.5 rounded-2xl border border-emerald-100 dark:border-emerald-900/40">
+                            <p class="text-[11px] font-bold text-emerald-700 dark:text-emerald-400">مشاريع منجزة</p>
+                            <p class="text-2xl font-black text-emerald-600 mt-0.5"><%= locals.completed_projects_count || 0 %></p>
+                            <span class="text-[10px] text-emerald-600 font-bold">محصلات نهائية ✓</span>
+                        </div>
+                        <div class="bg-amber-50/70 dark:bg-amber-950/30 p-3.5 rounded-2xl border border-amber-100 dark:border-amber-900/40">
+                            <p class="text-[11px] font-bold text-amber-700 dark:text-amber-400">مبرمجة / للدراسة</p>
+                            <p class="text-2xl font-black text-amber-600 mt-0.5"><%= (locals.planned_projects_count || 0) + (locals.study_projects_count || 0) %></p>
+                            <span class="text-[10px] text-amber-600 font-bold">مشاريع مقبلة</span>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar & Active Projects Preview -->
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-xs font-bold mb-1.5">
+                                <span class="text-gray-600 dark:text-gray-300">معدل الإنجاز والتنفيذ العام للمشاريع</span>
+                                <span class="text-emerald-600 font-black"><%= locals.avg_progress || 0 %>% مكتمل</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-blue-500 via-emerald-500 to-green-600 rounded-full transition-all duration-500" style="width: <%= Math.max(5, locals.avg_progress || 0) %>%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Status Tags List -->
+                        <div class="pt-2 flex flex-wrap gap-2 text-[11px]">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-blue-100 dark:bg-blue-950 text-blue-900 dark:text-blue-300 font-bold">
+                                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                                جارية: <%= locals.active_projects_count || 0 %>
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-900 dark:text-emerald-300 font-bold">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                منجزة: <%= locals.completed_projects_count || 0 %>
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300 font-bold">
+                                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                                مبرمجة: <%= locals.planned_projects_count || 0 %>
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-purple-100 dark:bg-purple-950 text-purple-900 dark:text-purple-300 font-bold">
+                                <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+                                قيد الدراسة: <%= locals.study_projects_count || 0 %>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Navigation Tabs for Admin Sections -->
+        <div class="flex flex-wrap gap-2 border-b border-gray-200 dark:border-gray-800 mb-8 pb-3">
+            <button type="button" onclick="switchAdminTab('tab-members')" id="btn-tab-members" class="admin-tab-btn active bg-blue-950 text-white px-5 py-2.5 rounded-2xl text-xs font-black transition shadow">
+                👥 سجل المنخرطين (<%= users.length %>)
+            </button>
+            <button type="button" onclick="switchAdminTab('tab-projects')" id="btn-tab-projects" class="admin-tab-btn bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-100 px-5 py-2.5 rounded-2xl text-xs font-black transition border border-gray-200 dark:border-gray-800">
+                📊 مشاريع وأنشطة الجمعية (<%= (locals.projects || []).length %>)
+            </button>
+            <button type="button" onclick="switchAdminTab('tab-honorary')" id="btn-tab-honorary" class="admin-tab-btn bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-100 px-5 py-2.5 rounded-2xl text-xs font-black transition border border-gray-200 dark:border-gray-800">
+                ⭐ الأعضاء الشرفيون (<%= (locals.honorary_members || []).length %>)
+            </button>
+            <button type="button" onclick="switchAdminTab('tab-workshops')" id="btn-tab-workshops" class="admin-tab-btn bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-100 px-5 py-2.5 rounded-2xl text-xs font-black transition border border-gray-200 dark:border-gray-800">
+                🎓 الورشات والتسجيلات (<%= (locals.workshops || []).length %> ورشات)
+            </button>
+            <button type="button" onclick="switchAdminTab('tab-proposals')" id="btn-tab-proposals" class="admin-tab-btn bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-100 px-5 py-2.5 rounded-2xl text-xs font-black transition border border-gray-200 dark:border-gray-800">
+                💡 المقترحات التشاركية (<%= (locals.proposals || []).length %>)
+            </button>
+            <button type="button" onclick="switchAdminTab('tab-donations')" id="btn-tab-donations" class="admin-tab-btn bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-100 px-5 py-2.5 rounded-2xl text-xs font-black transition border border-gray-200 dark:border-gray-800">
+                💖 عروض الدعم والشراكة (<%= (locals.donations || []).length %>)
+            </button>
+            <button type="button" onclick="switchAdminTab('tab-emails')" id="btn-tab-emails" class="admin-tab-btn bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-100 px-5 py-2.5 rounded-2xl text-xs font-black transition border border-gray-200 dark:border-gray-800">
+                📨 سجل الإشعارات البريدية (<%= (locals.email_logs || []).length %>)
+            </button>
+            <button type="button" onclick="switchAdminTab('tab-card-sample')" id="btn-tab-card-sample" class="admin-tab-btn bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 hover:bg-gray-100 px-5 py-2.5 rounded-2xl text-xs font-black transition border border-amber-300/60 dark:border-amber-500/40 flex items-center gap-1.5 text-amber-700 dark:text-amber-300">
+                💳 <span>نموذج بطاقة العضوية</span>
+            </button>
+        </div>
+
+        <!-- TAB 1: MEMBERS -->
+        <div id="tab-members" class="admin-tab-pane">
+            <!-- Filter & Search Controls -->
+            <div class="bg-white dark:bg-gray-900 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 mb-8 flex flex-col md:flex-row gap-4 justify-between items-center">
+                <div class="w-full md:w-80">
+                    <input type="text" id="member-search" placeholder="🔍 ابحث بالاسم، الهاتف، أو الحي..." onkeyup="filterTable()" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-2xl text-xs outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="flex flex-wrap gap-2 w-full md:w-auto items-center">
+                    <select id="quartier-filter" onchange="filterTable()" class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xs p-2.5 rounded-xl font-bold outline-none">
+                        <option value="all">كل الأحياء</option>
+                        <option value="حي مولاي إسماعيل">حي مولاي إسماعيل</option>
+                        <option value="حي الأمل">حي الأمل</option>
+                        <option value="حي الفرح">حي الفرح</option>
+                        <option value="حي الوفاق">حي الوفاق</option>
+                        <option value="تجزئة النخيل">تجزئة النخيل</option>
+                    </select>
+
+                    <select id="cotisation-filter" onchange="filterTable()" class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xs p-2.5 rounded-xl font-bold outline-none">
+                        <option value="all">كل الاشتراكات</option>
+                        <option value="مدفوع">مدفوع ✓</option>
+                        <option value="في الانتظار">في الانتظار ⏳</option>
+                    </select>
+
+                    <button type="button" onclick="setFilterStatus('all')" class="status-btn active bg-blue-950 text-white px-4 py-2 rounded-xl text-xs font-bold transition">الكل (<%= users.length %>)</button>
+                    <button type="button" onclick="setFilterStatus('قيد الانتظار')" class="status-btn bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 px-4 py-2 rounded-xl text-xs font-bold transition">قيد الانتظار (<%= pending_count %>)</button>
+                    <button type="button" onclick="setFilterStatus('تم القبول')" class="status-btn bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 px-4 py-2 rounded-xl text-xs font-bold transition">معتمدون (<%= accepted_count %>)</button>
+                </div>
+            </div>
+
+            <!-- Members Table -->
+            <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+                <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-black text-blue-950 dark:text-white"><%= currentLang === 'en' ? 'Members Registry' : 'سجل المنخرطين والأعضاء' %></h2>
+                        <p class="text-xs text-gray-400 mt-0.5">إدارة ومراجعة بيانات بطاقات العضوية وواجبات الانخراط مع إشعار بريدي تلقائي</p>
+                    </div>
+                </div>
+                <div class="overflow-x-auto p-2">
+                    <table class="w-full <%= currentLang === 'en' ? 'text-left' : 'text-right' %> border-collapse" id="members-table">
+                        <thead>
+                            <tr class="text-gray-400 text-xs border-b border-gray-100 dark:border-gray-800">
+                                <th class="pb-3 px-4 font-bold">العضو والهوية</th>
+                                <th class="pb-3 px-4 font-bold">التواصل والحي</th>
+                                <th class="pb-3 px-4 font-bold">الوضعية</th>
+                                <th class="pb-3 px-4 font-bold">واجب الانخراط</th>
+                                <th class="pb-3 px-4 font-bold text-center">الإجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-xs font-medium">
+                            <% users.forEach(function(u) { %>
+                            <tr class="member-row border-b border-gray-50 dark:border-gray-800/60 hover:bg-gray-50/80 dark:hover:bg-gray-800/40 transition-colors" data-status="<%= u.status %>" data-cotisation="<%= u.cotisation_status || 'في الانتظار' %>" data-quartier="<%= u.quartier || 'مدينة الدروة' %>">
+                                <td class="py-4 px-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-xl bg-blue-100 dark:bg-gray-800 text-blue-900 dark:text-yellow-400 flex items-center justify-center font-bold text-base flex-shrink-0">
+                                            <%= u.nom_complet.charAt(0) %>
+                                        </div>
+                                        <div class="overflow-hidden">
+                                            <p class="font-black text-sm text-blue-950 dark:text-white truncate member-name"><%= u.nom_complet %></p>
+                                            <p class="text-gray-400 text-[11px] font-mono mt-0.5"><%= u.membership_id || 'ASLD-2025-00' + u.id %> | <%= u.email %></p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-4">
+                                    <p class="font-bold text-gray-700 dark:text-gray-300 member-phone"><%= u.telephone || '-' %></p>
+                                    <p class="text-gray-400 text-[11px] member-quartier">📍 <%= u.quartier || 'مدينة الدروة' %></p>
+                                </td>
+                                <td class="py-4 px-4">
+                                    <% if (u.status === 'en_attente' || u.status === 'قيد الانتظار') { %>
+                                        <span class="bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 px-3 py-1 rounded-lg font-black text-[11px]">⏳ قيد الانتظار</span>
+                                    <% } else if (u.status === 'تم القبول' || u.status === 'valide') { %>
+                                        <span class="bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 px-3 py-1 rounded-lg font-black text-[11px]">✓ معتمد</span>
+                                    <% } else { %>
+                                        <span class="bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300 px-3 py-1 rounded-lg font-black text-[11px]">✕ مرفوض</span>
+                                    <% } %>
+                                </td>
+                                <td class="py-4 px-4">
+                                    <a href="/admin/cotisation/<%= u.id %>" title="انقر لتعديل حالة الأداء" class="inline-block">
+                                        <% if (u.cotisation_status === 'مدفوع') { %>
+                                            <span class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-lg text-[10px] font-black transition cursor-pointer">
+                                                100 MAD (مدفوع ✓)
+                                            </span>
+                                        <% } else { %>
+                                            <span class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-2.5 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer">
+                                                في الانتظار (تبديل ↻)
+                                            </span>
+                                        <% } %>
+                                    </a>
+                                </td>
+                                <td class="py-4 px-4">
+                                    <div class="flex justify-center items-center gap-2">
+                                        <button type="button" onclick="previewMemberCard('<%= (u.nom_complet || '').replace(/'/g, '\\\'') %>', '<%= u.membership_id || ('ASLD-2026-00' + u.id) %>', '<%= (u.quartier || 'مدينة الدروة').replace(/'/g, '\\\'') %>', '<%= u.cin || 'BK******' %>', '<%= u.cotisation_status || 'مدفوع' %>')" class="bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 text-blue-900 dark:text-blue-300 border border-blue-200 dark:border-blue-800 px-2.5 py-1.5 rounded-xl font-bold transition text-xs flex items-center gap-1" title="معاينة نموذج بطاقة العضوية">
+                                            💳 <span>بطاقة</span>
+                                        </button>
+                                        <% if (u.status !== 'تم القبول') { %>
+                                            <a href="/valider_membre.php?id=<%= u.id %>&action=accepter" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-xl font-bold transition text-xs shadow-sm">
+                                                قبول وتفعيل
+                                            </a>
+                                        <% } %>
+                                        <% if (u.status !== 'مرفوض') { %>
+                                            <a href="/valider_membre.php?id=<%= u.id %>&action=refuser" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1.5 rounded-xl font-bold transition text-xs">
+                                                رفض
+                                            </a>
+                                        <% } %>
+                                    </div>
+                                </td>
+                            </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: PROJECTS & STRATEGIC ACTIVITIES (المشاريع والأنشطة الميدانية) -->
+        <div id="tab-projects" class="admin-tab-pane hidden">
+            <!-- Header & Action Bar -->
+            <div class="bg-white dark:bg-gray-900 rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 dark:border-gray-800 mb-8">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 pb-6 border-b border-gray-100 dark:border-gray-800">
+                    <div>
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-10 h-10 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl font-black">📊</span>
+                            <div>
+                                <h2 class="text-xl md:text-2xl font-black text-blue-950 dark:text-white">إدارة مشاريع وأنشطة الجمعية</h2>
+                                <p class="text-xs text-gray-400 mt-0.5">متابعة دقيقة لمبادرات الجمعية، حالات التقدم، الميزانيات، ولجان الإشراف</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" onclick="toggleAddProjectForm()" class="bg-blue-950 hover:bg-blue-900 text-white px-5 py-2.5 rounded-2xl font-black text-xs transition flex items-center gap-2 shadow-sm">
+                        <span>➕ إضافة مشروع جديد</span>
+                    </button>
+                </div>
+
+                <!-- Status Filter Buttons -->
+                <div class="flex flex-wrap gap-2 items-center">
+                    <span class="text-xs font-bold text-gray-400 ml-2">تصفية حسب الحالة:</span>
+                    <button type="button" onclick="filterProjectCards('all')" class="project-filter-btn active bg-blue-950 text-white px-4 py-1.5 rounded-xl text-xs font-black transition">
+                        الكل (<%= (locals.projects || []).length %>)
+                    </button>
+                    <button type="button" onclick="filterProjectCards('en_cours')" class="project-filter-btn bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 px-4 py-1.5 rounded-xl text-xs font-black transition">
+                        🔄 قيد التنفيذ (<%= locals.active_projects_count || 0 %>)
+                    </button>
+                    <button type="button" onclick="filterProjectCards('termine')" class="project-filter-btn bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 px-4 py-1.5 rounded-xl text-xs font-black transition">
+                        ✅ منجز (<%= locals.completed_projects_count || 0 %>)
+                    </button>
+                    <button type="button" onclick="filterProjectCards('planifie')" class="project-filter-btn bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 px-4 py-1.5 rounded-xl text-xs font-black transition">
+                        📅 مبرمج (<%= locals.planned_projects_count || 0 %>)
+                    </button>
+                    <button type="button" onclick="filterProjectCards('en_etude')" class="project-filter-btn bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 px-4 py-1.5 rounded-xl text-xs font-black transition">
+                        🔍 قيد الدراسة (<%= locals.study_projects_count || 0 %>)
+                    </button>
+                </div>
+
+                <!-- Add Project Collapsible Form -->
+                <div id="add-project-form-container" class="mt-8 pt-6 border-t border-gray-100 dark:border-gray-800 hidden">
+                    <h3 class="text-base font-black text-blue-950 dark:text-white mb-4 flex items-center gap-2">
+                        <span>📝</span> <span>استمارة تسجيل مشروع أو نشاط جديد</span>
+                    </h3>
+                    <form action="/admin/projects/add" method="POST" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="lg:col-span-2">
+                            <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">اسم المشروع / المبادرة *</label>
+                            <input type="text" name="title" required placeholder="مثال: القافلة الطبية التضامنية 2026" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-600">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">المجال / الصنف *</label>
+                            <select name="category" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-xs font-bold outline-none focus:ring-2 focus:ring-blue-600">
+                                <option value="صحي وتضامني">صحي وتضامني</option>
+                                <option value="بيئي وتطوعي">بيئي وتطوعي</option>
+                                <option value="تكوين وتأهيل">تكوين وتأهيل</option>
+                                <option value="رياضي وتربوي">رياضي وتربوي</option>
+                                <option value="اجتماعي وتمكين">اجتماعي وتمكين الشباب</option>
+                                <option value="ثقافي وفني">ثقافي وفني</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">حالة المشروع *</label>
+                            <select name="status" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-xs font-bold outline-none focus:ring-2 focus:ring-blue-600">
+                                <option value="en_cours">قيد التنفيذ (En cours)</option>
+                                <option value="planifie">مبرمج (Planifié)</option>
+                                <option value="en_etude">قيد الدراسة (En étude)</option>
+                                <option value="termine">منجز (Terminé)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">نسبة الإنجاز (0-100%)</label>
+                            <input type="number" name="progress" min="0" max="100" value="10" placeholder="مثال: 50" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-600">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">الميزانية التقديرية</label>
+                            <input type="text" name="budget" placeholder="مثال: 25,000 درهم" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-600">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">الفئة المستهدفة</label>
+                            <input type="text" name="beneficiaries" placeholder="مثال: 300 مستفيد بالدروة" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-600">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">المشرف / اللجنة</label>
+                            <input type="text" name="leader" placeholder="مثال: لجنة الشؤون الاجتماعية" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-600">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">تاريخ البداية</label>
+                            <input type="date" name="start_date" value="<%= new Date().toISOString().substring(0, 10) %>" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-600">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">تاريخ الانتهاء المتوقع</label>
+                            <input type="date" name="end_date" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-600">
+                        </div>
+                        <div class="lg:col-span-2">
+                            <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">وصف المشروع وأهدافه</label>
+                            <input type="text" name="description" placeholder="تفاصيل مختصرة عن محاور المشروع وشركائه..." class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-600">
+                        </div>
+                        <div class="lg:col-span-4 flex justify-end gap-3 mt-2">
+                            <button type="button" onclick="toggleAddProjectForm()" class="px-5 py-2.5 rounded-xl text-xs font-bold text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                                إلغاء
+                            </button>
+                            <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-7 py-2.5 rounded-xl font-black text-xs transition shadow-md">
+                                حفظ المشروع في المنظومة ✓
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Projects Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <% (locals.projects || []).forEach(p => { %>
+                    <div class="project-card bg-white dark:bg-gray-900 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col justify-between transition hover:shadow-md" data-status="<%= p.status %>">
+                        <div>
+                            <!-- Category and Status Badges -->
+                            <div class="flex justify-between items-start gap-2 mb-4">
+                                <span class="bg-slate-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-xl text-[11px] font-black">
+                                    🏷️ <%= p.category || 'عام' %>
+                                </span>
+
+                                <% if (p.status === 'en_cours') { %>
+                                    <span class="bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/60 px-3 py-1 rounded-xl text-[11px] font-black flex items-center gap-1.5">
+                                        <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                                        قيد التنفيذ
+                                    </span>
+                                <% } else if (p.status === 'termine') { %>
+                                    <span class="bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 px-3 py-1 rounded-xl text-[11px] font-black flex items-center gap-1.5">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                        منجز بنجاح ✓
+                                    </span>
+                                <% } else if (p.status === 'planifie') { %>
+                                    <span class="bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60 px-3 py-1 rounded-xl text-[11px] font-black flex items-center gap-1.5">
+                                        <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                                        مبرمج مستقبلاً
+                                    </span>
+                                <% } else { %>
+                                    <span class="bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/60 px-3 py-1 rounded-xl text-[11px] font-black flex items-center gap-1.5">
+                                        <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+                                        قيد الدراسة
+                                    </span>
+                                <% } %>
+                            </div>
+
+                            <!-- Title & Description -->
+                            <h3 class="font-black text-lg text-blue-950 dark:text-white mb-2 leading-snug">
+                                <%= p.title %>
+                            </h3>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mb-5 line-clamp-3 leading-relaxed">
+                                <%= p.description || 'مشروع ميداني تتبناه الجمعية لخدمة الساكنة المحلية وتعزيز التنمية المندمجة.' %>
+                            </p>
+
+                            <!-- Progress Bar -->
+                            <div class="mb-5 bg-slate-50 dark:bg-gray-800/50 p-3.5 rounded-2xl border border-gray-100 dark:border-gray-800">
+                                <div class="flex justify-between items-center text-xs font-bold mb-1.5">
+                                    <span class="text-gray-500 dark:text-gray-400">نسبة التقدم والإنجاز</span>
+                                    <span class="font-black <%= p.progress >= 100 ? 'text-emerald-600' : 'text-blue-600 dark:text-yellow-400' %>">
+                                        <%= p.progress || 0 %>%
+                                    </span>
+                                </div>
+                                <div class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                    <div class="h-full <%= p.progress >= 100 ? 'bg-emerald-500' : 'bg-gradient-to-r from-blue-500 to-indigo-600' %> rounded-full transition-all duration-300" style="width: <%= p.progress || 0 %>%"></div>
+                                </div>
+                            </div>
+
+                            <!-- Key Project Facts Grid -->
+                            <div class="grid grid-cols-2 gap-2 text-[11px] mb-5">
+                                <div class="bg-gray-50 dark:bg-gray-800/60 p-2.5 rounded-xl">
+                                    <span class="text-gray-400 block font-bold">الميزانية:</span>
+                                    <span class="font-black text-blue-950 dark:text-white"><%= p.budget || '-' %></span>
+                                </div>
+                                <div class="bg-gray-50 dark:bg-gray-800/60 p-2.5 rounded-xl">
+                                    <span class="text-gray-400 block font-bold">المستفيدين:</span>
+                                    <span class="font-black text-blue-950 dark:text-white"><%= p.beneficiaries || '-' %></span>
+                                </div>
+                                <div class="bg-gray-50 dark:bg-gray-800/60 p-2.5 rounded-xl">
+                                    <span class="text-gray-400 block font-bold">المشرف:</span>
+                                    <span class="font-black text-blue-950 dark:text-white truncate block"><%= p.leader || 'المكتب التنفيذي' %></span>
+                                </div>
+                                <div class="bg-gray-50 dark:bg-gray-800/60 p-2.5 rounded-xl">
+                                    <span class="text-gray-400 block font-bold">الفترة:</span>
+                                    <span class="font-black text-blue-950 dark:text-white truncate block"><%= p.start_date || '2026' %></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Status & Progress Quick Update Form -->
+                        <div class="pt-4 border-t border-gray-100 dark:border-gray-800">
+                            <form action="/admin/projects/<%= p.id %>/status" method="POST" class="flex items-center gap-2 mb-2">
+                                <select name="status" class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-[11px] font-bold p-2 rounded-xl outline-none flex-1">
+                                    <option value="en_cours" <%= p.status === 'en_cours' ? 'selected' : '' %>>قيد التنفيذ</option>
+                                    <option value="termine" <%= p.status === 'termine' ? 'selected' : '' %>>منجز</option>
+                                    <option value="planifie" <%= p.status === 'planifie' ? 'selected' : '' %>>مبرمج</option>
+                                    <option value="en_etude" <%= p.status === 'en_etude' ? 'selected' : '' %>>قيد الدراسة</option>
+                                </select>
+                                <input type="number" name="progress" min="0" max="100" value="<%= p.progress || 0 %>" title="النسبة %" class="w-16 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-[11px] font-bold p-2 rounded-xl text-center outline-none">
+                                <button type="submit" class="bg-blue-950 hover:bg-blue-900 text-white px-3 py-2 rounded-xl text-[11px] font-black transition">
+                                    تعديل ✓
+                                </button>
+                            </form>
+                            <div class="flex justify-between items-center text-[10px] text-gray-400 px-1 pt-2 border-t border-gray-100 dark:border-gray-800">
+                                <span>المعرف: #<%= p.id %></span>
+                                <form action="/admin/projects/delete/<%= p.id %>" method="POST" class="inline m-0">
+                                    <button type="submit" class="text-red-500 hover:text-red-700 font-bold hover:underline py-1 px-2.5 rounded-lg bg-red-50 dark:bg-red-950/40 text-[11px] transition flex items-center gap-1 cursor-pointer">
+                                        <span>🗑️ حذف المشروع</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+
+                <% if (!locals.projects || locals.projects.length === 0) { %>
+                    <div class="col-span-full bg-white dark:bg-gray-900 rounded-3xl p-12 text-center border border-gray-100 dark:border-gray-800">
+                        <span class="text-4xl mb-3 block">📋</span>
+                        <h3 class="text-lg font-black text-blue-950 dark:text-white">لا توجد مشاريع مسجلة حالياً</h3>
+                        <p class="text-xs text-gray-400 mt-1 mb-4">اضغط على زر "إضافة مشروع جديد" لتسجيل برامج وأنشطة الجمعية.</p>
+                        <button type="button" onclick="toggleAddProjectForm()" class="bg-blue-950 text-white px-5 py-2 rounded-xl text-xs font-bold">
+                            إضافة أول مشروع الآن
+                        </button>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+
+        <!-- TAB: HONORARY MEMBERS (عضو شرفي) -->
+        <div id="tab-honorary" class="admin-tab-pane hidden">
+            <!-- Add Honorary Member Form -->
+            <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 md:p-8 mb-8">
+                <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100 dark:border-gray-800">
+                    <span class="w-10 h-10 rounded-2xl bg-amber-50 dark:bg-amber-950/50 text-amber-500 flex items-center justify-center text-xl">⭐</span>
+                    <div>
+                        <h2 class="text-xl font-black text-blue-950 dark:text-white">إدراج عضو شرفي جديد</h2>
+                        <p class="text-xs text-gray-400">إضافة الشخصيات والشركاء الشرفيين للظهور في صفحة "عضو شرفي"</p>
+                    </div>
+                </div>
+                <form action="/admin/honorary-members/add" method="POST" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">الاسم الكامل *</label>
+                        <input type="text" name="name" required placeholder="مثال: ذ. مصطفى العلوي" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-xs outline-none focus:ring-2 focus:ring-amber-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">الصفة أو الوسام التكريمي *</label>
+                        <input type="text" name="title" required placeholder="مثال: فاعل خير / رئيس شرفي" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-xs outline-none focus:ring-2 focus:ring-amber-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">رابط الصورة (اختياري)</label>
+                        <input type="url" name="photo" placeholder="https://..." class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-xs outline-none focus:ring-2 focus:ring-amber-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">نبذة أو مساهمة مشرفة</label>
+                        <input type="text" name="notes" placeholder="مساهماته أو خدماته الجليلة..." class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-xs outline-none focus:ring-2 focus:ring-amber-400">
+                    </div>
+                    <div class="md:col-span-2 lg:col-span-4 flex justify-end mt-2">
+                        <button type="submit" class="bg-gradient-to-r from-amber-500 to-yellow-500 text-blue-950 font-black px-6 py-3 rounded-xl text-xs shadow-md hover:shadow-lg transition">
+                            ⭐ إضافة وتثبيت العضو الشرفي
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Honorary Members Registry -->
+            <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+                <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-black text-blue-950 dark:text-white">لائحة الشرف والأعضاء الشرفيون</h2>
+                        <p class="text-xs text-gray-400 mt-0.5">الشخصيات المسجلة رسمياً بالمنصة لظهورها في صفحة الأعضاء الشرفيين</p>
+                    </div>
+                    <a href="/membres.php" target="_blank" class="text-xs font-bold text-blue-900 dark:text-yellow-400 hover:underline flex items-center gap-1">
+                        <span>معاينة الصفحة العامة</span> <span>↗</span>
+                    </a>
+                </div>
+
+                <% if ((locals.honorary_members || []).length === 0) { %>
+                    <div class="p-12 text-center">
+                        <div class="w-16 h-16 bg-amber-50 dark:bg-amber-950/40 text-amber-500 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-3">
+                            🎖️
+                        </div>
+                        <h3 class="text-lg font-black text-blue-950 dark:text-white mb-1">لا يوجد أي عضو شرفي مسجل حالياً</h3>
+                        <p class="text-xs text-gray-400 max-w-md mx-auto">
+                            تم تفريغ السجل بناءً على طلبك وتركه جاهزاً بالكامل لملئه مستقبلاً ببيانات الأعضاء الشرفيين. استخدم النموذج أعلاه لإضافة أي اسم عند اعتماده.
+                        </p>
+                    </div>
+                <% } else { %>
+                    <div class="overflow-x-auto p-2">
+                        <table class="w-full text-right border-collapse">
+                            <thead>
+                                <tr class="text-gray-400 text-xs border-b border-gray-100 dark:border-gray-800">
+                                    <th class="pb-3 px-4 font-bold">#</th>
+                                    <th class="pb-3 px-4 font-bold">العضو الشرفي</th>
+                                    <th class="pb-3 px-4 font-bold">الصفة التكريمية</th>
+                                    <th class="pb-3 px-4 font-bold">ملاحظات وإشادة</th>
+                                    <th class="pb-3 px-4 font-bold">تاريخ الإدراج</th>
+                                    <th class="pb-3 px-4 font-bold">إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-xs font-medium">
+                                <% honorary_members.forEach(function(m) { %>
+                                <tr class="border-b border-gray-50 dark:border-gray-800/60 hover:bg-gray-50/80 dark:hover:bg-gray-800/40">
+                                    <td class="py-4 px-4 font-mono text-gray-400">#<%= m.id %></td>
+                                    <td class="py-4 px-4">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-9 h-9 rounded-full bg-amber-100 dark:bg-gray-800 text-amber-600 flex items-center justify-center font-bold text-xs overflow-hidden">
+                                                <% if (m.photo) { %>
+                                                    <img src="<%= m.photo %>" class="w-full h-full object-cover" alt="">
+                                                <% } else { %>
+                                                    ⭐
+                                                <% } %>
+                                            </div>
+                                            <span class="font-black text-blue-950 dark:text-white"><%= m.name %></span>
+                                        </div>
+                                    </td>
+                                    <td class="py-4 px-4">
+                                        <span class="bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300 px-3 py-1 rounded-full text-[11px] font-bold">
+                                            <%= m.title %>
+                                        </span>
+                                    </td>
+                                    <td class="py-4 px-4 text-gray-600 dark:text-gray-300"><%= m.notes || '-' %></td>
+                                    <td class="py-4 px-4 text-gray-400"><%= m.created_at || 'معتمد' %></td>
+                                    <td class="py-4 px-4">
+                                        <a href="/admin/honorary-members/delete/<%= m.id %>" onclick="return confirm('هل تريد حذف هذا العضو الشرفي؟')" class="text-red-500 hover:text-red-700 font-bold text-xs">
+                                            حذف 🗑️
+                                        </a>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+
+        <!-- TAB 2: WORKSHOPS & REGISTRATIONS -->
+        <div id="tab-workshops" class="admin-tab-pane hidden">
+            <!-- Add Workshop Form -->
+            <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 md:p-8 mb-8">
+                <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100 dark:border-gray-800">
+                    <span class="w-10 h-10 rounded-2xl bg-blue-50 dark:bg-blue-950/50 text-blue-900 dark:text-yellow-400 flex items-center justify-center text-xl">🎓</span>
+                    <div>
+                        <h2 class="text-xl font-black text-blue-950 dark:text-white">برمجة ورشة تكوينية جديدة</h2>
+                        <p class="text-xs text-gray-400">إضافة ورشة تكوينية أو نشاط تطوعي بدار الشباب لتظهر في الصفحة الرئيسية</p>
+                    </div>
+                </div>
+                <form action="/admin/workshops/add" method="POST" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">عنوان الورشة *</label>
+                        <input type="text" name="title" required placeholder="مثال: ورشة صناعة المحتوى الرقمي" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">المجال / التصنيف</label>
+                        <select name="category" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="تكوين وتأهيل">تكوين وتأهيل</option>
+                            <option value="تطوع وبيئة">تطوع وبيئة</option>
+                            <option value="تمكين رقمي">تمكين رقمي</option>
+                            <option value="رياضة وترفيه">رياضة وترفيه</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">الموعد والتوقيت *</label>
+                        <input type="text" name="date" required placeholder="مثال: السبت 25 مارس 2026 - 15:00" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">المكان</label>
+                        <input type="text" name="location" value="دار الشباب دروة" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">المؤطر / المدرب</label>
+                        <input type="text" name="coach" placeholder="اسم المدرب أو المؤطر" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">المقاعد المتاحة</label>
+                        <input type="number" name="seats_total" value="30" min="5" max="200" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="md:col-span-2 lg:col-span-3">
+                        <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">وصف مقتضب للورشة</label>
+                        <input type="text" name="description" placeholder="أهداف الورشة والمهارات المكتسبة للمستفيدين..." class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="md:col-span-2 lg:col-span-3 flex justify-end mt-2">
+                        <button type="submit" class="bg-[#122a4e] text-white font-black px-6 py-3 rounded-xl text-xs shadow-md hover:bg-blue-900 transition">
+                            ➕ نشر الورشة التكوينية
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Programmed Workshops List -->
+            <% if ((locals.workshops || []).length > 0) { %>
+                <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 mb-8">
+                    <h3 class="text-base font-black text-blue-950 dark:text-white mb-4">الورشات المبرمجة حالياً (<%= workshops.length %>)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <% workshops.forEach(function(w) { %>
+                            <div class="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700 flex flex-col justify-between">
+                                <div>
+                                    <div class="flex items-center justify-between gap-2">
+                                        <span class="text-[10px] font-bold bg-blue-100 dark:bg-blue-950 text-blue-900 dark:text-blue-300 px-2.5 py-0.5 rounded-full"><%= w.category %></span>
+                                        <% if (w.status === 'publie') { %>
+                                            <span class="text-[10px] font-black bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded-lg">✓ معتمد ومنشور</span>
+                                        <% } else { %>
+                                            <span class="text-[10px] font-black bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 px-2 py-0.5 rounded-lg">⏳ بانتظار الاعتماد</span>
+                                        <% } %>
+                                    </div>
+                                    <h4 class="font-black text-sm text-blue-950 dark:text-white mt-2"><%= w.title %></h4>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">📅 <%= w.date %> | 📍 <%= w.location %></p>
+                                    <% if (w.author_name) { %>
+                                        <p class="text-[11px] text-indigo-600 dark:text-indigo-400 font-bold mt-1">👤 مقترح من المنخرط: <%= w.author_name %></p>
+                                    <% } %>
+                                </div>
+                                <div class="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center text-xs">
+                                    <span class="text-gray-400">المقاعد: <%= w.seats_taken %> / <%= w.seats_total %></span>
+                                    <div class="flex items-center gap-2">
+                                        <% if (w.status !== 'publie') { %>
+                                            <a href="/admin/workshops/approve/<%= w.id %>" class="text-emerald-600 hover:text-emerald-700 font-bold text-xs bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1 rounded-lg">اعتماد ونشر ✓</a>
+                                        <% } %>
+                                        <a href="/admin/workshops/delete/<%= w.id %>" onclick="return confirm('هل أنت متأكد من حذف هذه الورشة؟')" class="text-red-500 hover:text-red-700 font-bold text-xs">حذف 🗑️</a>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    </div>
+                </div>
+            <% } %>
+
+            <!-- Workshop Registrations Table -->
+            <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+                <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex flex-wrap justify-between items-center gap-4">
+                    <div>
+                        <h2 class="text-xl font-black text-blue-950 dark:text-white">قائمة المسجلين في الورشات التكوينية</h2>
+                        <p class="text-xs text-gray-400 mt-0.5">متابعة طلبات حجز المقاعد وتأكيدات الحضور بدار الشباب</p>
+                    </div>
+                    <a href="/admin/export-workshops-csv" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl font-bold transition text-xs flex items-center gap-2 shadow">
+                        📥 <span>تصدير لائحة الورشات (Excel)</span>
+                    </a>
+                </div>
+
+                <% if ((locals.workshop_registrations || []).length === 0) { %>
+                    <div class="p-12 text-center">
+                        <div class="w-16 h-16 bg-blue-50 dark:bg-gray-800 text-blue-900 dark:text-yellow-400 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-3">
+                            📋
+                        </div>
+                        <h3 class="text-lg font-black text-blue-950 dark:text-white mb-1">لا توجد تسجيلات ورشات مسجلة حالياً</h3>
+                        <p class="text-xs text-gray-400 max-w-md mx-auto">
+                            تم مسح البيانات التجريبية السابقة. ستظهر أي طلبات تسجيل جديدة يرسلها الشباب عبر المنصة في هذا الجدول فوراً مع بيانات الاتصال والتأكيد.
+                        </p>
+                    </div>
+                <% } else { %>
+                    <div class="overflow-x-auto p-2">
+                        <table class="w-full text-right border-collapse">
+                            <thead>
+                                <tr class="text-gray-400 text-xs border-b border-gray-100 dark:border-gray-800">
+                                    <th class="pb-3 px-4 font-bold">#</th>
+                                    <th class="pb-3 px-4 font-bold">الورشة التكوينية</th>
+                                    <th class="pb-3 px-4 font-bold">اسم المستفيد</th>
+                                    <th class="pb-3 px-4 font-bold">البريد الإلكتروني</th>
+                                    <th class="pb-3 px-4 font-bold">رقم الهاتف</th>
+                                    <th class="pb-3 px-4 font-bold">تاريخ التسجيل</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-xs font-medium">
+                                <% workshop_registrations.forEach(function(reg) { %>
+                                <tr class="border-b border-gray-50 dark:border-gray-800/60 hover:bg-gray-50/80 dark:hover:bg-gray-800/40">
+                                    <td class="py-4 px-4 font-mono text-gray-400">#<%= reg.id %></td>
+                                    <td class="py-4 px-4 font-bold text-blue-950 dark:text-white"><%= reg.workshop_title || 'ورشة تكوينية' %></td>
+                                    <td class="py-4 px-4 font-bold text-gray-700 dark:text-gray-300"><%= reg.name %></td>
+                                    <td class="py-4 px-4 font-mono text-gray-500"><%= reg.email %></td>
+                                    <td class="py-4 px-4 font-bold text-emerald-600"><%= reg.phone %></td>
+                                    <td class="py-4 px-4 text-gray-400"><%= reg.created_at %></td>
+                                </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+
+        <!-- TAB 3: COMMUNITY PROPOSALS -->
+        <div id="tab-proposals" class="admin-tab-pane hidden">
+            <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+                <div class="p-6 border-b border-gray-100 dark:border-gray-800">
+                    <h2 class="text-xl font-black text-blue-950 dark:text-white">المقترحات والمبادرات التشاركية للمواطنين</h2>
+                    <p class="text-xs text-gray-400 mt-0.5">مراجعة أفكار المجتمع المصوت عليها لدعمها وبرمجتها في برنامج العمل السنوي</p>
+                </div>
+                <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <% (locals.proposals || []).forEach(function(p) { %>
+                    <div class="p-5 rounded-2xl bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start gap-3 mb-2">
+                                <span class="bg-blue-100 dark:bg-blue-950 text-blue-900 dark:text-blue-300 px-3 py-0.5 rounded-full text-[11px] font-black"><%= p.category %></span>
+                                <span class="text-amber-500 font-black text-sm">⭐ <%= p.votes %> صوت</span>
+                            </div>
+                            <h3 class="font-bold text-base text-blue-950 dark:text-white mb-2"><%= p.title %></h3>
+                            <p class="text-xs text-gray-600 dark:text-gray-300 leading-relaxed mb-4"><%= p.description %></p>
+                        </div>
+                        <div class="pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center text-xs">
+                            <span class="text-gray-400">بواسطة: <strong><%= p.author %></strong></span>
+                            <div class="flex gap-2">
+                                <a href="/admin/proposals/<%= p.id %>/feature" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-1 rounded-xl font-bold transition text-[11px]">
+                                    +10 دعم 🚀
+                                </a>
+                                <a href="/admin/proposals/<%= p.id %>/delete" onclick="return confirm('هل أنت متأكد من حذف هذا المقترح؟')" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1 rounded-xl font-bold transition text-[11px]">
+                                    حذف 🗑️
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <% }); %>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: DONATIONS & PARTNERSHIPS -->
+        <div id="tab-donations" class="admin-tab-pane hidden">
+            <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+                <div class="p-6 border-b border-gray-100 dark:border-gray-800">
+                    <h2 class="text-xl font-black text-blue-950 dark:text-white">سجل طلبات الدعم المالي والشراكات المؤسساتية</h2>
+                    <p class="text-xs text-gray-400 mt-0.5">متابعة وعود التبرعات والشراكات مع أعيان وفاعلي مدينة الدروة</p>
+                </div>
+                <div class="overflow-x-auto p-2">
+                    <table class="w-full text-right border-collapse">
+                        <thead>
+                            <tr class="text-gray-400 text-xs border-b border-gray-100 dark:border-gray-800">
+                                <th class="pb-3 px-4 font-bold">#</th>
+                                <th class="pb-3 px-4 font-bold">الاسم أو المؤسسة</th>
+                                <th class="pb-3 px-4 font-bold">رقم الهاتف</th>
+                                <th class="pb-3 px-4 font-bold">نوع المساهمة</th>
+                                <th class="pb-3 px-4 font-bold">ملاحظات / مقترحات</th>
+                                <th class="pb-3 px-4 font-bold">التاريخ</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-xs font-medium">
+                            <% (locals.donations || []).forEach(function(d) { %>
+                            <tr class="border-b border-gray-50 dark:border-gray-800/60 hover:bg-gray-50/80 dark:hover:bg-gray-800/40">
+                                <td class="py-4 px-4 font-mono text-gray-400">#<%= d.id %></td>
+                                <td class="py-4 px-4 font-black text-blue-950 dark:text-white"><%= d.donor_name %></td>
+                                <td class="py-4 px-4 font-bold text-emerald-600"><%= d.donor_phone %></td>
+                                <td class="py-4 px-4">
+                                    <span class="bg-purple-50 text-purple-700 border border-purple-200 px-2.5 py-1 rounded-lg text-[10px] font-bold">
+                                        <%= d.donation_type %>
+                                    </span>
+                                </td>
+                                <td class="py-4 px-4 text-gray-600 dark:text-gray-300"><%= d.notes || '-' %></td>
+                                <td class="py-4 px-4 text-gray-400"><%= d.date ? d.date.substring(0, 10) : '' %></td>
+                            </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: EMAIL DISPATCH LOGS -->
+        <div id="tab-emails" class="admin-tab-pane hidden">
+            <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+                <div class="p-6 border-b border-gray-100 dark:border-gray-800">
+                    <h2 class="text-xl font-black text-blue-950 dark:text-white">سجل الإشعارات البريدية التلقائية (Email Dispatch Logs)</h2>
+                    <p class="text-xs text-gray-400 mt-0.5">سجل التدقيق الرقمي لكافة الإشعارات المرسلة للمنخرطين والمشاركين في الورشات</p>
+                </div>
+                <div class="overflow-x-auto p-2">
+                    <table class="w-full text-right border-collapse">
+                        <thead>
+                            <tr class="text-gray-400 text-xs border-b border-gray-100 dark:border-gray-800">
+                                <th class="pb-3 px-4 font-bold">#</th>
+                                <th class="pb-3 px-4 font-bold">المستلم</th>
+                                <th class="pb-3 px-4 font-bold">البريد الإلكتروني</th>
+                                <th class="pb-3 px-4 font-bold">نوع الإشعار</th>
+                                <th class="pb-3 px-4 font-bold">الموضوع</th>
+                                <th class="pb-3 px-4 font-bold">التوقيت</th>
+                                <th class="pb-3 px-4 font-bold">الحالة</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-xs font-medium">
+                            <% (locals.email_logs || []).forEach(function(log) { %>
+                            <tr class="border-b border-gray-50 dark:border-gray-800/60 hover:bg-gray-50/80 dark:hover:bg-gray-800/40">
+                                <td class="py-4 px-4 font-mono text-gray-400">#<%= log.id %></td>
+                                <td class="py-4 px-4 font-bold text-blue-950 dark:text-white"><%= log.recipient_name %></td>
+                                <td class="py-4 px-4 font-mono text-gray-500"><%= log.to %></td>
+                                <td class="py-4 px-4">
+                                    <span class="bg-blue-50 dark:bg-blue-950 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded text-[10px] font-bold">
+                                        <%= log.type %>
+                                    </span>
+                                </td>
+                                <td class="py-4 px-4 text-gray-700 dark:text-gray-300 font-medium"><%= log.subject %></td>
+                                <td class="py-4 px-4 text-gray-400 text-[11px]"><%= log.date %></td>
+                                <td class="py-4 px-4 text-emerald-600 font-black"><%= log.status %></td>
+                            </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 6: OFFICIAL DIGITAL MEMBERSHIP CARD SPECIMEN (نموذج بطاقة العضوية الرسمية) -->
+        <div id="tab-card-sample" class="admin-tab-pane hidden">
+            
+            <!-- Card Specimen Control Bar -->
+            <div class="bg-white dark:bg-gray-900 rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 dark:border-gray-800 mb-8">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gray-100 dark:border-gray-800 pb-6 mb-6">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-black uppercase text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 px-3 py-1 rounded-full border border-amber-200 dark:border-amber-900/50">
+                                نموذج معتمد (Official Specimen)
+                            </span>
+                            <span class="text-xs text-gray-400 font-mono">ISO/IEC 7810 ID-1 Standard</span>
+                        </div>
+                        <h2 class="text-xl md:text-2xl font-black text-blue-950 dark:text-white mt-1">
+                            نموذج بطاقة العضوية الرقمية لجمعية مبادرات بلا حدود
+                        </h2>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            المواصفات الفنية والشكلية للبطاقة الرسمية المعتمدة للمنخرطين المسددين لواجب الانخراط السنوي بدار الشباب الدروة
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <button type="button" onclick="printMembershipCard()" class="bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-blue-950 px-5 py-2.5 rounded-xl font-black text-xs shadow-md transition flex items-center gap-2 cursor-pointer">
+                            🖨️ <span>طباعة نموذج البطاقة (PDF/Papier)</span>
+                        </button>
+                        <button type="button" onclick="resetCardSpecimen()" class="bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 text-gray-700 dark:text-gray-300 px-4 py-2.5 rounded-xl font-bold text-xs transition">
+                            🔄 إعادة تعيين
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live Test Selector -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 bg-slate-50 dark:bg-gray-800/50 p-4 rounded-2xl border border-gray-200/60 dark:border-gray-700/60">
+                    <div>
+                        <label class="block text-[11px] font-black text-gray-600 dark:text-gray-300 mb-1">اختر منخرطاً للمعاينة:</label>
+                        <select id="specimen-member-selector" onchange="onSpecimenSelectMember(this)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-xs font-bold p-2.5 rounded-xl outline-none">
+                            <option value="default">⭐ نموذج افتراضي: إبراهيم أيت الديمان (رئيس الجمعية)</option>
+                            <% users.forEach(function(u) { %>
+                                <option value="<%= u.id %>" 
+                                    data-name="<%= u.nom_complet %>"
+                                    data-id="<%= u.membership_id || ('ASLD-2026-00' + u.id) %>"
+                                    data-quartier="<%= u.quartier || 'مدينة الدروة' %>"
+                                    data-cin="<%= u.cin || 'BK782910' %>"
+                                    data-cotisation="<%= u.cotisation_status || 'مدفوع' %>">
+                                    <%= u.nom_complet %> (<%= u.membership_id || ('ASLD-2026-00' + u.id) %>)
+                                </option>
+                            <% }); %>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-black text-gray-600 dark:text-gray-300 mb-1">الاسم الكامل الظاهر:</label>
+                        <input type="text" id="specimen-input-name" value="إبراهيم أيت الديمان" oninput="updateCardPreview()" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-xs font-bold p-2.5 rounded-xl outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-black text-gray-600 dark:text-gray-300 mb-1">رقم العضوية التسلسلي:</label>
+                        <input type="text" id="specimen-input-id" value="ASLD-2026-00101" oninput="updateCardPreview()" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-xs font-bold p-2.5 rounded-xl outline-none font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-black text-gray-600 dark:text-gray-300 mb-1">الحي / المنطقة:</label>
+                        <input type="text" id="specimen-input-quartier" value="حي الوفاء - الدروة" oninput="updateCardPreview()" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-xs font-bold p-2.5 rounded-xl outline-none">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Two-sided Card Display (Recto & Verso) -->
+            <div id="card-print-area" class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto mb-12">
+                
+                <!-- CARD FACE 1: RECTO (الوجه الأمامي) -->
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center px-2">
+                        <span class="text-xs font-black text-blue-950 dark:text-white flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+                            الوجه الأمامي (Recto)
+                        </span>
+                        <span class="text-[10px] text-gray-400">85.6mm × 54mm</span>
+                    </div>
+
+                    <div class="relative bg-gradient-to-br from-[#0c1c36] via-[#122b52] to-[#071326] text-white p-6 rounded-3xl shadow-2xl border-2 border-amber-400/50 overflow-hidden aspect-[1.586/1] flex flex-col justify-between">
+                        
+                        <!-- Anti-counterfeit guilloche & watermark -->
+                        <div class="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#fbbf24_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                        <div class="absolute -left-12 -bottom-12 opacity-15 pointer-events-none">
+                            <img src="/image/logo_assoc.jpg" alt="Logo Watermark" class="w-56 h-56 rounded-full mix-blend-screen">
+                        </div>
+
+                        <!-- Card Top Bar: Official Moroccan Association Header -->
+                        <div class="relative z-10 flex items-center justify-between border-b border-amber-400/30 pb-3">
+                            <div class="flex items-center gap-3">
+                                <img src="/image/logo_assoc.jpg" alt="Logo" class="h-12 w-12 object-contain rounded-xl bg-white p-1 shadow-md border border-amber-400/40">
+                                <div>
+                                    <h4 class="text-xs md:text-sm font-black text-amber-300 tracking-wide leading-tight">جمعية مبادرات بلا حدود</h4>
+                                    <p class="text-[9px] text-blue-200 tracking-tight">Association Initiatives Sans Frontières</p>
+                                    <p class="text-[8px] text-amber-400/90 font-medium">دار الشباب دروة — إقليم برشيد</p>
+                                </div>
+                            </div>
+                            <div class="text-left flex flex-col items-end">
+                                <span class="bg-amber-400/20 text-amber-300 border border-amber-400/40 text-[9px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                                    بطاقة منخرط 2026
+                                </span>
+                                <span class="text-[8px] text-blue-300 font-mono mt-0.5">CARTE D'ADHÉRENT</span>
+                            </div>
+                        </div>
+
+                        <!-- Card Body: Photo & Member Details -->
+                        <div class="relative z-10 grid grid-cols-12 gap-3 items-center my-auto py-2">
+                            <!-- Avatar / Photo Frame with Gold Ring -->
+                            <div class="col-span-4 flex flex-col items-center">
+                                <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-tr from-amber-400 to-yellow-300 p-0.5 shadow-xl relative">
+                                    <div class="w-full h-full rounded-[14px] bg-[#0c1c36] flex items-center justify-center overflow-hidden border border-white/20 text-3xl font-black text-amber-300" id="specimen-avatar">
+                                        إ
+                                    </div>
+                                    <span class="absolute -bottom-1.5 bg-emerald-500 text-white text-[8px] font-black px-2 py-0.2 rounded-full border border-white/60 shadow">
+                                        معتمد ✓
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Member Information Fields -->
+                            <div class="col-span-8 space-y-1 text-right">
+                                <div>
+                                    <p class="text-[9px] text-amber-200/80 font-bold">الاسم الكامل / Nom Complet:</p>
+                                    <h3 class="text-sm sm:text-base font-black text-white leading-tight truncate" id="specimen-display-name">
+                                        إبراهيم أيت الديمان
+                                    </h3>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2 pt-0.5">
+                                    <div>
+                                        <p class="text-[8px] text-blue-300 font-bold">رقم العضوية:</p>
+                                        <p class="text-xs font-mono font-black text-amber-300" id="specimen-display-id">ASLD-2026-00101</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-[8px] text-blue-300 font-bold">ر.ب.ت.و / CIN:</p>
+                                        <p class="text-xs font-mono font-bold text-gray-200" id="specimen-display-cin">BK782910</p>
+                                    </div>
+                                </div>
+                                <div class="pt-0.5">
+                                    <p class="text-[8px] text-blue-300 font-bold">الحي والمدينة:</p>
+                                    <p class="text-[11px] font-bold text-gray-200 truncate" id="specimen-display-quartier">📍 حي الوفاء - الدروة</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card Bottom Bar: Security & Validity -->
+                        <div class="relative z-10 border-t border-white/10 pt-2.5 flex justify-between items-center text-[8px] text-blue-200">
+                            <div class="flex items-center gap-2">
+                                <span class="bg-emerald-400/20 text-emerald-300 border border-emerald-400/30 px-2 py-0.5 rounded-md font-black text-[8px]">
+                                    الواجب السنوي: مسدد ✓ (100 درهم)
+                                </span>
+                            </div>
+                            <div class="font-mono text-amber-300 font-bold text-[9px]">
+                                صالحة إلى: 31/12/2026
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- CARD FACE 2: VERSO (الوجه الخلفي) -->
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center px-2">
+                        <span class="text-xs font-black text-blue-950 dark:text-white flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                            الوجه الخلفي (Verso)
+                        </span>
+                        <span class="text-[10px] text-gray-400">شروط العضوية والتحقق الرقمي</span>
+                    </div>
+
+                    <div class="relative bg-gradient-to-br from-[#0c1c36] via-[#122b52] to-[#071326] text-white p-6 rounded-3xl shadow-2xl border-2 border-amber-400/50 overflow-hidden aspect-[1.586/1] flex flex-col justify-between">
+                        
+                        <!-- Watermark -->
+                        <div class="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#fbbf24_1px,transparent_1px)] [background-size:16px_16px]"></div>
+
+                        <!-- Verso Top Header: Legal Notice -->
+                        <div class="relative z-10 border-b border-amber-400/20 pb-2 flex justify-between items-center">
+                            <div>
+                                <p class="text-[9px] font-black text-amber-300">مقتضيات قانونية وضوابط العضوية</p>
+                                <p class="text-[8px] text-blue-200">ظهير شريف رقم 1.58.376 المنظم لحق تأسيس الجمعيات</p>
+                            </div>
+                            <span class="text-[10px] text-amber-400">🇲🇦 المملكة المغربية</span>
+                        </div>
+
+                        <!-- Verso Body: QR Code & Rights / Duties -->
+                        <div class="relative z-10 grid grid-cols-12 gap-3 items-center my-auto py-1">
+                            <div class="col-span-8 text-right space-y-1">
+                                <p class="text-[9px] text-gray-300 leading-tight">
+                                    • هذه البطاقة شخصية وتخول لصاحبها المشاركة في أنشطة وورشات الجمعية، وحضور الجموع العامة وفق القانون الأساسي.
+                                </p>
+                                <p class="text-[9px] text-gray-300 leading-tight">
+                                    • يُرجى الإدلاء بهذه البطاقة عند ولوج دار الشباب أو الاستفادة من مبادرات الجمعية والشراكات المبرمة.
+                                </p>
+                                <p class="text-[8px] text-amber-300/80 font-medium pt-1">
+                                    في حالة العثور عليها يرجى تسليمها لدار الشباب الدروة أو الاتصال بإدارة الجمعية.
+                                </p>
+                            </div>
+
+                            <!-- Real-time Verification QR Code -->
+                            <div class="col-span-4 flex flex-col items-center justify-center">
+                                <div class="bg-white p-1.5 rounded-xl shadow-lg border border-amber-400/50">
+                                    <img id="specimen-qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=ASLD-VERIFIED-ASLD-2026-00101" alt="QR Code" class="w-16 h-16 sm:w-20 sm:h-20">
+                                </div>
+                                <span class="text-[8px] text-amber-300 mt-1 font-mono">مسح للتحقق 🔒</span>
+                            </div>
+                        </div>
+
+                        <!-- Verso Footer: President Signature & Association Stamp -->
+                        <div class="relative z-10 border-t border-white/10 pt-2 flex justify-between items-end">
+                            <div class="text-right">
+                                <p class="text-[8px] text-gray-400">المقر: دار الشباب دروة - إقليم برشيد</p>
+                                <p class="text-[8px] text-blue-200">البريد: contact@asld-deroua.ma</p>
+                            </div>
+                            <div class="text-center flex items-center gap-2">
+                                <div class="w-10 h-10 rounded-full border border-amber-400/60 bg-white/5 flex items-center justify-center text-[7px] text-amber-300 text-center font-black p-0.5 leading-tight rotate-12">
+                                    طابع<br>الجمعية
+                                </div>
+                                <div class="text-left">
+                                    <p class="text-[8px] text-amber-200 font-bold">توقيع رئيس الجمعية</p>
+                                    <p class="text-[9px] font-black text-white font-serif">إبراهيم أيت الديمان</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Features & Technical Specifications Box -->
+            <div class="bg-white dark:bg-gray-900 rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 dark:border-gray-800">
+                <h3 class="font-black text-base text-blue-950 dark:text-white mb-4 flex items-center gap-2">
+                    <span>🛡️</span>
+                    <span>المعايير الأمنية والتقنية لبطاقة العضوية الرسمية:</span>
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="p-4 rounded-2xl bg-blue-50/60 dark:bg-gray-800/60 border border-blue-100 dark:border-gray-700/60">
+                        <p class="font-black text-xs text-blue-950 dark:text-white mb-1">📐 المقاس المعياري الدولي</p>
+                        <p class="text-[11px] text-gray-500 dark:text-gray-400">معيار ISO/IEC 7810 ID-1 القياسي (85.6mm × 54mm) متوافق مع كافة حافظات البطاقات وماكينات الطباعة البلاستيكية PVC.</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-amber-50/60 dark:bg-gray-800/60 border border-amber-100 dark:border-gray-700/60">
+                        <p class="font-black text-xs text-blue-950 dark:text-white mb-1">🔒 رمز QR ديناميكي للتحقق</p>
+                        <p class="text-[11px] text-gray-500 dark:text-gray-400">يتضمن كل كود تشفيراً رقمياً فريداً للتحقق من هوية المنخرط ووضعية سداد الانخراط السنوي في ثانية واحدة دون تزوير.</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-emerald-50/60 dark:bg-gray-800/60 border border-emerald-100 dark:border-gray-700/60">
+                        <p class="font-black text-xs text-blue-950 dark:text-white mb-1">📜 المرجعية القانونية الوطنية</p>
+                        <p class="text-[11px] text-gray-500 dark:text-gray-400">مؤسسة ومحررة وفق ظهير الحريات العامة لسنة 1958 والقانون الأساسي المعتمد لدى السلطات المحلية بإقليم برشيد.</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-purple-50/60 dark:bg-gray-800/60 border border-purple-100 dark:border-gray-700/60">
+                        <p class="font-black text-xs text-blue-950 dark:text-white mb-1">🖨️ تصدير فوري للطباعة</p>
+                        <p class="text-[11px] text-gray-500 dark:text-gray-400">إمكانية طباعة البطاقة فورياً عبر المتصفح أو حفظها بصيغة PDF عالية الدقة لتسليمها للمنخرط بعد فحص الوثائق.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        let currentStatusFilter = 'all';
+
+        // Tab Switching
+        function switchAdminTab(tabId) {
+            document.querySelectorAll('.admin-tab-pane').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-950', 'text-white', 'shadow');
+                btn.classList.add('bg-white', 'dark:bg-gray-900', 'text-gray-700', 'dark:text-gray-300');
+            });
+
+            const activePane = document.getElementById(tabId);
+            if (activePane) activePane.classList.remove('hidden');
+
+            const activeBtn = document.getElementById('btn-' + tabId);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-blue-950', 'text-white', 'shadow');
+                activeBtn.classList.remove('bg-white', 'dark:bg-gray-900', 'text-gray-700', 'dark:text-gray-300');
+            }
+        }
+
+        // Handle URL hash for tabs
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.location.hash === '#projects-tab') {
+                switchAdminTab('tab-projects');
+            } else if (window.location.hash === '#proposals-tab') {
+                switchAdminTab('tab-proposals');
+            } else if (window.location.hash === '#honorary-tab') {
+                switchAdminTab('tab-honorary');
+            } else if (window.location.hash === '#workshops-tab') {
+                switchAdminTab('tab-workshops');
+            } else if (window.location.hash === '#card-sample-tab') {
+                switchAdminTab('tab-card-sample');
+            }
+        });
+
+        // Membership Card Specimen Functions
+        function previewMemberCard(name, memId, quartier, cin, cotisation) {
+            document.getElementById('specimen-input-name').value = name || 'إبراهيم أيت الديمان';
+            document.getElementById('specimen-input-id').value = memId || 'ASLD-2026-00101';
+            document.getElementById('specimen-input-quartier').value = quartier || 'مدينة الدروة';
+            updateCardPreview();
+            switchAdminTab('tab-card-sample');
+            document.getElementById('tab-card-sample').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function onSpecimenSelectMember(selectEl) {
+            if (selectEl.value === 'default') {
+                resetCardSpecimen();
+                return;
+            }
+            const opt = selectEl.options[selectEl.selectedIndex];
+            document.getElementById('specimen-input-name').value = opt.dataset.name || '';
+            document.getElementById('specimen-input-id').value = opt.dataset.id || '';
+            document.getElementById('specimen-input-quartier').value = opt.dataset.quartier || '';
+            updateCardPreview();
+        }
+
+        function updateCardPreview() {
+            const name = document.getElementById('specimen-input-name').value.trim() || 'إبراهيم أيت الديمان';
+            const memId = document.getElementById('specimen-input-id').value.trim() || 'ASLD-2026-00101';
+            const quartier = document.getElementById('specimen-input-quartier').value.trim() || 'مدينة الدروة';
+
+            document.getElementById('specimen-display-name').textContent = name;
+            document.getElementById('specimen-display-id').textContent = memId;
+            document.getElementById('specimen-display-quartier').textContent = '📍 ' + quartier;
+            document.getElementById('specimen-avatar').textContent = name.charAt(0);
+            
+            const qrImg = document.getElementById('specimen-qr-code');
+            if (qrImg) {
+                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=ASLD-VERIFIED-${encodeURIComponent(memId)}`;
+            }
+        }
+
+        function resetCardSpecimen() {
+            document.getElementById('specimen-input-name').value = 'إبراهيم أيت الديمان';
+            document.getElementById('specimen-input-id').value = 'ASLD-2026-00101';
+            document.getElementById('specimen-input-quartier').value = 'حي الوفاء - الدروة';
+            const selector = document.getElementById('specimen-member-selector');
+            if (selector) selector.value = 'default';
+            updateCardPreview();
+        }
+
+        function printMembershipCard() {
+            window.print();
+        }
+
+        // Toggle Add Project Form
+        function toggleAddProjectForm() {
+            const formContainer = document.getElementById('add-project-form-container');
+            if (formContainer) {
+                formContainer.classList.toggle('hidden');
+                if (!formContainer.classList.contains('hidden')) {
+                    formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        }
+
+        // Filter Project Cards by Status
+        function filterProjectCards(status) {
+            const cards = document.querySelectorAll('.project-card');
+            cards.forEach(card => {
+                if (status === 'all' || card.dataset.status === status) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Update button styles
+            const buttons = document.querySelectorAll('.project-filter-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-blue-950', 'text-white', 'active');
+                btn.classList.add('bg-gray-100', 'dark:bg-gray-800', 'text-gray-700', 'dark:text-gray-300');
+            });
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('bg-blue-950', 'text-white', 'active');
+                event.currentTarget.classList.remove('bg-gray-100', 'dark:bg-gray-800', 'text-gray-700', 'dark:text-gray-300');
+            }
+        }
+
+        function setFilterStatus(status) {
+            currentStatusFilter = status;
+            const buttons = document.querySelectorAll('.status-btn');
+            buttons.forEach(btn => {
+                if (btn.textContent.includes(status) || (status === 'all' && btn.textContent.includes('الكل'))) {
+                    btn.classList.add('bg-blue-950', 'text-white');
+                    btn.classList.remove('bg-gray-100', 'text-gray-600');
+                } else {
+                    btn.classList.remove('bg-blue-950', 'text-white');
+                    btn.classList.add('bg-gray-100', 'text-gray-600');
+                }
+            });
+            filterTable();
+        }
+
+        function filterTable() {
+            const query = document.getElementById('member-search').value.toLowerCase().trim();
+            const quartierFilter = document.getElementById('quartier-filter').value;
+            const cotisationFilter = document.getElementById('cotisation-filter').value;
+            const rows = document.querySelectorAll('.member-row');
+
+            rows.forEach(row => {
+                const status = row.dataset.status;
+                const cotisation = row.dataset.cotisation;
+                const quartier = row.dataset.quartier;
+                const name = row.querySelector('.member-name').textContent.toLowerCase();
+                const phone = row.querySelector('.member-phone').textContent.toLowerCase();
+
+                const matchesStatus = (currentStatusFilter === 'all') || (status === currentStatusFilter);
+                const matchesQuartier = (quartierFilter === 'all') || (quartier.includes(quartierFilter));
+                const matchesCotisation = (cotisationFilter === 'all') || (cotisation === cotisationFilter);
+                const matchesQuery = !query || name.includes(query) || phone.includes(query) || quartier.toLowerCase().includes(query);
+
+                if (matchesStatus && matchesQuartier && matchesCotisation && matchesQuery) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

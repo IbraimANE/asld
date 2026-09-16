@@ -1,0 +1,120 @@
+/* إعدادات المتغيرات العامة */
+:root {
+    --primary-dark: #122a4e;
+    --primary-light: #2C69B3;
+    --accent-yellow: #eab308;
+    --accent-green: #4AB76B;
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.5);
+}
+
+/* تحسينات شريط التمرير */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { 
+    background: var(--primary-dark); 
+    border-radius: 12px; 
+    border: 2px solid #f1f5f9;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--primary-light); }
+
+/* تأثير الزجاج الموحد */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(18, 42, 78, 0.05);
+}
+
+.glass-nav { 
+    background: rgba(255, 255, 255, 0.85); 
+    backdrop-filter: blur(20px); 
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3); 
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}
+
+.hero-bg {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+    position: relative;
+}
+.hero-bg::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(234,179,8,0.1) 0%, transparent 50%);
+    animation: pulse-glow 10s infinite alternate;
+    pointer-events: none;
+}
+@keyframes pulse-glow {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.1); }
+}
+
+.card-modern {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-modern:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 50px -12px rgba(30, 58, 138, 0.2);
+    border-color: rgba(30, 58, 138, 0.15);
+}
+
+/* حركات الأزرار المتقدمة */
+.btn-advanced {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    z-index: 1;
+}
+.btn-advanced::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: right 0.6s ease;
+    z-index: -1;
+}
+.btn-advanced:hover::before { right: 100%; }
+.btn-advanced:hover { transform: translateY(-3px); box-shadow: 0 10px 20px -10px rgba(0,0,0,0.3); }
+
+/* تحسينات البطاقات */
+.card-hover {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.card-hover:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 20px 40px -15px rgba(18, 42, 78, 0.15);
+    border-color: rgba(44, 105, 179, 0.2);
+}
+
+/* تأثيرات الصور */
+.img-zoom-hover { overflow: hidden; }
+.img-zoom-hover img {
+    transition: transform 0.7s ease;
+}
+.img-zoom-hover:hover img { transform: scale(1.08); }
+
+/* تحسينات حقول الإدخال */
+.input-modern {
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+.input-modern:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 4px rgba(44, 105, 179, 0.1);
+    transform: translateY(-2px);
+}
+
+/* حركات الجداول في لوحة التحكم */
+.table-row-hover { transition: background-color 0.2s ease, transform 0.2s ease; }
+.table-row-hover:hover {
+    background-color: #f8fafc;
+}

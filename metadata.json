@@ -1,0 +1,6 @@
+{
+  "name": "Boundless Initiatives - ASLD",
+  "description": "Plateforme web officielle de l'Association Initiatives Sans Frontières (جمعية مبادرات بلا حدود) avec gestion des adhérents, publication de projets et espace administratif.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

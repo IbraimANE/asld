@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="<%= lang.lang_code %>" dir="<%= lang.direction %>">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= currentLang === 'en' ? 'Honorary Member | Boundless Initiatives' : (currentLang === 'fr' ? 'Membre d\'honneur | Initiatives Sans Frontières' : 'عضو شرفي - مبادرات بلا حدود') %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/custom.css">
+    <style>body { font-family: 'Tajawal', sans-serif; }</style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-950 text-gray-800 dark:text-gray-100 transition-colors">
+
+    <%- include('partials/nav') %>
+
+    <main class="container mx-auto py-16 px-4 md:px-6">
+        <div class="text-center mb-12">
+            <span class="inline-block bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300 font-black text-xs px-4 py-1.5 rounded-full mb-3 shadow-sm border border-amber-200 dark:border-amber-800">
+                ⭐ <%= currentLang === 'en' ? 'Honorary Distinctions' : (currentLang === 'fr' ? 'Distinctions Honorifiques' : 'العضوية الشرفية ولائحة الشرف') %>
+            </span>
+            <h1 class="text-4xl md:text-5xl font-black text-[#122A4E] dark:text-white mb-3 block">
+                <%= currentLang === 'en' ? 'Honorary Member' : (currentLang === 'fr' ? 'Membre d\'honneur' : 'عضو شرفي') %>
+            </h1>
+            <p class="text-gray-500 dark:text-gray-400 font-medium max-w-xl mx-auto text-sm md:text-base">
+                <%= currentLang === 'en' 
+                    ? 'Dedicated to distinguished figures, benefactors, and community partners recognized for their outstanding service.' 
+                    : (currentLang === 'fr' 
+                        ? 'Espace d\'honneur réservé aux personnalités éminentes et partenaires distingués de l\'association.' 
+                        : 'فضاء التقدير المخصص للشخصيات المرموقة، الداعمين، والشركاء الشرفيين تقديراً لإسهاماتهم الجليلة بمدينة الدروة.') %>
+            </p>
+            <div class="h-1.5 w-24 bg-gradient-to-r from-amber-400 to-yellow-500 mx-auto rounded-full mt-4"></div>
+        </div>
+
+        <% if ((locals.honorary_members || []).length === 0) { %>
+            <!-- Empty state left to be filled in the future as requested -->
+            <div class="bg-white dark:bg-gray-900 p-12 md:p-16 rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 max-w-2xl mx-auto text-center">
+                <div class="w-20 h-20 bg-amber-50 dark:bg-amber-950/50 text-amber-500 rounded-3xl flex items-center justify-center text-4xl mx-auto mb-6 shadow-inner border border-amber-200/60 dark:border-amber-700/50">
+                    🎖️
+                </div>
+                <h3 class="text-2xl font-black text-blue-950 dark:text-white mb-3">
+                    <%= currentLang === 'en' ? 'No Honorary Members Listed Yet' : (currentLang === 'fr' ? 'Aucun membre d\'honneur enregistré pour le moment' : 'لا يوجد أي عضو شرفي مسجل حالياً') %>
+                </h3>
+                <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed max-w-md mx-auto mb-6">
+                    <%= currentLang === 'en' 
+                        ? 'This official registry is reserved for honorary appointments. New honorary members will be announced and listed here in the future.' 
+                        : (currentLang === 'fr' 
+                            ? 'Ce registre officiel est réservé aux nominations honorifiques. Les membres d\'honneur seront affichés ici prochainement.' 
+                            : 'تم تخصيص هذا الفضاء للأعضاء الشرفيين والشخصيات الداعمة لعمل الجمعية ومشاريعها بمدينة الدروة. الفضاء فارغ حالياً وسيتم ملؤه وإدراج لائحة الشرف مستقبلاً.') %>
+                </p>
+                <div class="inline-flex items-center gap-2 bg-gray-50 dark:bg-gray-800/80 text-gray-500 dark:text-gray-400 text-xs px-4 py-2 rounded-xl font-bold border border-gray-200 dark:border-gray-700">
+                    <span>ℹ️</span>
+                    <span><%= currentLang === 'en' ? 'Space ready for future honorary appointments' : 'الفضاء جاهز للإدراج والملء مستقبلاً' %></span>
+                </div>
+            </div>
+        <% } else { %>
+            <!-- Grid rendered when filled in the future -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <% honorary_members.forEach(function(member) { %>
+                    <div class="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-xl border-t-4 border-amber-400 flex flex-col items-center text-center">
+                        <div class="w-24 h-24 rounded-full bg-amber-50 dark:bg-gray-800 border-2 border-amber-400 p-1 mb-4 flex items-center justify-center text-4xl overflow-hidden">
+                            <% if (member.photo) { %>
+                                <img src="<%= member.photo %>" class="w-full h-full object-cover rounded-full" alt="<%= member.name %>">
+                            <% } else { %>
+                                <span>⭐</span>
+                            <% } %>
+                        </div>
+                        <span class="bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-300 text-xs font-black px-3 py-1 rounded-full mb-2">
+                            عضو شرفي
+                        </span>
+                        <h3 class="text-xl font-black text-blue-950 dark:text-white"><%= member.name %></h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1"><%= member.title %></p>
+                        <% if (member.notes) { %>
+                            <p class="text-xs text-gray-600 dark:text-gray-300 mt-4 italic bg-gray-50 dark:bg-gray-800 p-3 rounded-xl"><%= member.notes %></p>
+                        <% } %>
+                    </div>
+                <% }); %>
+            </div>
+        <% } %>
+
+        <div class="mt-16 bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 max-w-2xl mx-auto text-center">
+            <h3 class="text-xl font-black text-blue-950 dark:text-white mb-2"><%= currentLang === 'en' ? 'Want to join as an active member?' : 'ترغب في الانخراط العادي والمشاركة في المبادرات؟' %></h3>
+            <p class="text-gray-500 dark:text-gray-400 text-xs md:text-sm mb-6"><%= currentLang === 'en' ? 'Submit your membership registration online and get your official card.' : 'يمكنك تقديم طلب انخراط سنوي والانضمام لكافة الأنشطة والورشات الميدانية بدار الشباب دروة.' %></p>
+            <a href="/inscription.php" class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-950 font-black px-8 py-3.5 rounded-xl shadow-lg hover:shadow-yellow-400/30 transition-all inline-block text-xs md:text-sm">
+                <%= lang.join_us %>
+            </a>
+        </div>
+    </main>
+
+    <%- include('partials/footer') %>
+
+</body>
+</html>

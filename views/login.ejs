@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="<%= lang.lang_code %>" dir="<%= lang.direction %>">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= currentLang === 'en' ? 'Administrative & Member Login | Boundless Initiatives' : 'تسجيل الدخول والمصادقة المركزية | مبادرات بلا حدود' %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/custom.css">
+    <style>
+        body { 
+            font-family: 'Tajawal', sans-serif; 
+            background: radial-gradient(circle at 50% 20%, #1a365d 0%, #0c1c38 60%, #081124 100%);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 md:p-6 text-gray-800">
+    <div class="bg-white/95 backdrop-blur-2xl p-6 sm:p-8 md:p-10 rounded-[2.5rem] shadow-2xl w-full max-w-lg border border-white/30 relative overflow-hidden">
+        
+        <!-- Header & Branding -->
+        <div class="text-center mb-6">
+            <a href="/index.php" class="inline-block transition-transform hover:scale-105">
+                <img src="/image/logo_assoc.jpg" class="h-20 w-auto mx-auto mb-3 rounded-2xl shadow-md bg-white p-1 border border-gray-100" alt="Logo">
+            </a>
+            <h1 class="text-2xl sm:text-3xl font-black text-[#122a4e]">
+                <%= currentLang === 'en' ? 'Central Authentication' : 'بوابة المصادقة المركزية' %>
+            </h1>
+            <p class="text-gray-500 text-xs sm:text-sm mt-1 font-medium">
+                <%= currentLang === 'en' ? 'Association Initiatives Sans Frontières - Deroua Platform' : 'جمعية مبادرات بلا حدود - منصة التدبير والتحكم' %>
+            </p>
+
+            <!-- Firebase Authentication Verified Badge -->
+            <div class="inline-flex items-center gap-2 mt-3 px-3.5 py-1 rounded-full bg-orange-50 border border-orange-200 text-orange-800 text-xs font-bold shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
+                <span>🔥 <%= currentLang === 'en' ? 'Protected by Firebase Authentication' : 'نظام المصادقة المشفر Firebase Authentication' %></span>
+                <span class="text-[10px] bg-orange-200/80 text-orange-900 px-1.5 py-0.5 rounded font-mono">v10</span>
+            </div>
+        </div>
+
+        <!-- Info Notice if any -->
+        <% if (locals.infoNotice) { %>
+            <div class="bg-blue-50 text-blue-900 p-4 rounded-2xl mb-5 text-xs sm:text-sm font-bold border border-blue-200 flex items-start gap-2.5">
+                <span class="text-base leading-none">ℹ️</span>
+                <div class="flex-1 leading-relaxed"><%= infoNotice %></div>
+            </div>
+        <% } %>
+
+        <!-- Global Alert Message if any -->
+        <% if (error) { %>
+            <div id="serverAlert" class="bg-red-50 text-red-700 p-4 rounded-2xl mb-5 text-xs sm:text-sm font-bold border border-red-200 flex items-start gap-2.5">
+                <span class="text-base leading-none">⚠️</span>
+                <div class="flex-1"><%= error %></div>
+            </div>
+        <% } %>
+
+        <!-- Client Alert Container (Dynamic) -->
+        <div id="clientAlert" class="hidden bg-amber-50 text-amber-900 p-4 rounded-2xl mb-5 text-xs sm:text-sm font-bold border border-amber-200 flex items-start gap-2.5">
+            <span class="text-base leading-none">🔒</span>
+            <div id="clientAlertText" class="flex-1"></div>
+        </div>
+
+        <!-- Authentication Mode Tabs -->
+        <div class="grid grid-cols-2 gap-2 p-1.5 bg-gray-100 rounded-2xl mb-6">
+            <button type="button" id="tabBtnAdmin" onclick="setLoginMode('admin')" class="py-2.5 px-3 rounded-xl font-black text-xs sm:text-sm transition-all duration-200 flex items-center justify-center gap-1.5 bg-blue-950 text-white shadow-md">
+                <span>👑</span>
+                <span><%= currentLang === 'en' ? 'Admin Dashboard' : 'لوحة الإدارة' %></span>
+            </button>
+            <button type="button" id="tabBtnMember" onclick="setLoginMode('member')" class="py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all duration-200 flex items-center justify-center gap-1.5 text-gray-600 hover:text-gray-900">
+                <span>👤</span>
+                <span><%= currentLang === 'en' ? 'Member Space' : 'فضاء المنخرطين' %></span>
+            </button>
+        </div>
+
+        <!-- Admin Access Notice Box -->
+        <div id="adminNoticeBox" class="bg-gradient-to-r from-blue-900 to-indigo-950 text-white rounded-2xl p-4 mb-6 shadow-inner border border-blue-800">
+            <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-black text-amber-300 flex items-center gap-1.5">
+                    <span>🛡️</span>
+                    <span><%= currentLang === 'en' ? 'Administrative Access Portal' : 'بوابة الإدارة المركزية' %></span>
+                </span>
+                <span class="text-[10px] bg-blue-800/80 px-2 py-0.5 rounded font-mono text-blue-200">Protected Area</span>
+            </div>
+            <p class="text-xs text-blue-100 leading-relaxed font-medium">
+                <%= currentLang === 'en' 
+                    ? 'Please enter your authorized administrative credentials to access the management dashboard.' 
+                    : 'يرجى إدخال البريد الإلكتروني وكلمة المرور المعتمدة للولوج إلى لوحة قيادة الإدارة.' %>
+            </p>
+        </div>
+
+        <!-- Member Notice Box (Hidden by default) -->
+        <div id="memberNoticeBox" class="hidden bg-emerald-50 border border-emerald-200 text-emerald-900 rounded-2xl p-4 mb-6">
+            <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-bold text-emerald-800">
+                    <%= currentLang === 'en' ? 'Registered Member Portal' : 'بوابة الأعضاء والمنخرطين' %>
+                </span>
+            </div>
+            <p class="text-xs text-emerald-700 leading-relaxed">
+                <%= currentLang === 'en' ? 'Access your digital membership card, publish initiatives, and view registered workshops.' : 'فضاء خاص بالمنخرطين لنشر المبادرات والأنشطة وتتبع بطاقة العضوية والورشات التكوينية.' %>
+            </p>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" action="/login.php" method="POST" class="space-y-4">
+            <input type="hidden" id="loginModeInput" name="login_mode" value="admin">
+
+            <!-- Email Address -->
+            <div>
+                <label for="emailInput" class="block text-gray-700 text-xs sm:text-sm font-bold mb-1.5 <%= currentLang === 'en' ? 'ml-1' : 'mr-1' %>">
+                    <%= currentLang === 'en' ? 'Email Address' : 'البريد الإلكتروني' %>
+                </label>
+                <div class="relative">
+                    <input 
+                        type="email" 
+                        id="emailInput" 
+                        name="email" 
+                        value="" 
+                        required 
+                        autocomplete="email"
+                        class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-medium focus:bg-white focus:ring-4 focus:ring-blue-500/15 focus:border-blue-700 outline-none transition-all"
+                        placeholder="name@mail.com"
+                    >
+                    <span class="absolute <%= currentLang === 'en' ? 'right-4' : 'left-4' %> top-1/2 -translate-y-1/2 text-gray-400 text-sm">
+                        ✉️
+                    </span>
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div>
+                <div class="flex items-center justify-between mb-1.5 <%= currentLang === 'en' ? 'ml-1' : 'mr-1' %>">
+                    <label for="passwordInput" class="block text-gray-700 text-xs sm:text-sm font-bold">
+                        <%= currentLang === 'en' ? 'Password' : 'كلمة المرور' %>
+                    </label>
+                    <button type="button" onclick="togglePasswordVisibility()" class="text-xs text-blue-900 font-bold hover:underline flex items-center gap-1">
+                        <span id="pwdEyeIcon">👁️</span>
+                        <span id="pwdEyeText"><%= currentLang === 'en' ? 'Show' : 'إظهار' %></span>
+                    </button>
+                </div>
+                <div class="relative">
+                    <input 
+                        type="password" 
+                        id="passwordInput" 
+                        name="password" 
+                        value="" 
+                        required 
+                        autocomplete="current-password"
+                        class="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-medium focus:bg-white focus:ring-4 focus:ring-blue-500/15 focus:border-blue-700 outline-none transition-all font-mono"
+                        placeholder="••••••••"
+                    >
+                    <span class="absolute <%= currentLang === 'en' ? 'right-4' : 'left-4' %> top-1/2 -translate-y-1/2 text-gray-400 text-sm">
+                        🔑
+                    </span>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button 
+                type="submit" 
+                id="submitBtn" 
+                class="w-full bg-[#122a4e] hover:bg-blue-900 text-white py-3.5 sm:py-4 rounded-2xl font-black text-sm sm:text-base shadow-xl shadow-blue-950/20 transition-all flex items-center justify-center gap-2 mt-2"
+            >
+                <span id="submitSpinner" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                <span id="submitBtnText"><%= currentLang === 'en' ? 'Log in to Admin Dashboard 🔒' : 'دخول لوحة الإدارة (Firebase Auth) 🔒' %></span>
+            </button>
+        </form>
+
+        <!-- Footer Links -->
+        <div class="mt-6 pt-5 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-500 font-medium">
+            <a href="/index.php" class="hover:text-blue-900 font-bold transition flex items-center gap-1">
+                <span>←</span>
+                <span><%= lang.back_home %></span>
+            </a>
+            <a href="/inscription.php" class="text-blue-700 font-bold hover:underline">
+                <%= currentLang === 'en' ? 'New Member? Register here' : 'طلب انخراط جديد بالجمعية' %>
+            </a>
+        </div>
+
+        <!-- System Security Footnote -->
+        <div class="mt-4 text-center">
+            <p class="text-[11px] text-gray-400 flex items-center justify-center gap-1">
+                <span>🔒</span>
+                <span>Firebase Authentication Client SDK Active</span>
+                <span>•</span>
+                <span>GCP Project: <%= (locals.firebaseConfig && locals.firebaseConfig.projectId) ? locals.firebaseConfig.projectId : 'named-set-pxjsq' %></span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Firebase SDK & Client Interactive Logic -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+        import { getAuth } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+
+        // Firebase Configuration injected from server
+        const firebaseConfig = <%- JSON.stringify(locals.firebaseConfig || {}) %>;
+
+        let authApp = null;
+        let authInstance = null;
+
+        if (firebaseConfig && firebaseConfig.apiKey) {
+            try {
+                authApp = initializeApp(firebaseConfig);
+                authInstance = getAuth(authApp);
+                console.log('[Firebase Auth] Client initialized for project:', firebaseConfig.projectId);
+            } catch (err) {
+                console.warn('[Firebase Auth] Initialization info:', err.message);
+            }
+        }
+
+        // Form submission intercept for validation
+        const loginForm = document.getElementById('loginForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const submitSpinner = document.getElementById('submitSpinner');
+        const submitBtnText = document.getElementById('submitBtnText');
+        const clientAlert = document.getElementById('clientAlert');
+        const clientAlertText = document.getElementById('clientAlertText');
+
+        loginForm.addEventListener('submit', (e) => {
+            const mode = document.getElementById('loginModeInput').value;
+            const email = (document.getElementById('emailInput').value || '').trim();
+            const pass = document.getElementById('passwordInput').value || '';
+
+            if (!email || !pass) {
+                e.preventDefault();
+                showClientAlert('يرجى إدخال البريد الإلكتروني وكلمة المرور.');
+                return;
+            }
+
+            // Show loading animation on valid submission
+            submitBtn.disabled = true;
+            submitSpinner.classList.remove('hidden');
+            submitBtnText.textContent = mode === 'admin' ? 'جاري التحقق والمصادقة...' : 'جاري تسجيل الدخول...';
+        });
+
+        function showClientAlert(msg) {
+            clientAlertText.textContent = msg;
+            clientAlert.classList.remove('hidden');
+            clientAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    </script>
+
+    <script>
+        let currentMode = 'admin';
+
+        function setLoginMode(mode) {
+            currentMode = mode;
+            document.getElementById('loginModeInput').value = mode;
+
+            const tabAdmin = document.getElementById('tabBtnAdmin');
+            const tabMember = document.getElementById('tabBtnMember');
+            const adminNoticeBox = document.getElementById('adminNoticeBox');
+            const memberNoticeBox = document.getElementById('memberNoticeBox');
+            const submitBtnText = document.getElementById('submitBtnText');
+
+            if (mode === 'admin') {
+                tabAdmin.className = 'py-2.5 px-3 rounded-xl font-black text-xs sm:text-sm transition-all duration-200 flex items-center justify-center gap-1.5 bg-blue-950 text-white shadow-md';
+                tabMember.className = 'py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all duration-200 flex items-center justify-center gap-1.5 text-gray-600 hover:text-gray-900';
+                adminNoticeBox.classList.remove('hidden');
+                memberNoticeBox.classList.add('hidden');
+                submitBtnText.textContent = 'دخول لوحة الإدارة 🔒';
+            } else {
+                tabMember.className = 'py-2.5 px-3 rounded-xl font-black text-xs sm:text-sm transition-all duration-200 flex items-center justify-center gap-1.5 bg-emerald-800 text-white shadow-md';
+                tabAdmin.className = 'py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all duration-200 flex items-center justify-center gap-1.5 text-gray-600 hover:text-gray-900';
+                adminNoticeBox.classList.add('hidden');
+                memberNoticeBox.classList.remove('hidden');
+                submitBtnText.textContent = 'دخول فضاء المنخرطين 👤';
+            }
+
+            // Always keep credentials fields empty on tab switch
+            document.getElementById('emailInput').value = '';
+            document.getElementById('passwordInput').value = '';
+
+            // Hide client alert if any
+            const clientAlert = document.getElementById('clientAlert');
+            if (clientAlert) clientAlert.classList.add('hidden');
+        }
+
+        function togglePasswordVisibility() {
+            const pwd = document.getElementById('passwordInput');
+            const eyeText = document.getElementById('pwdEyeText');
+            if (pwd.type === 'password') {
+                pwd.type = 'text';
+                eyeText.textContent = '<%= currentLang === "en" ? "Hide" : "إخفاء" %>';
+            } else {
+                pwd.type = 'password';
+                eyeText.textContent = '<%= currentLang === "en" ? "Show" : "إظهار" %>';
+            }
+        }
+    </script>
+</body>
+</html>
