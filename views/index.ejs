@@ -32,11 +32,11 @@
             }
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Heebo:wght@400;500;700;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="/custom.css">
     <style>
-        body { font-family: 'Tajawal', sans-serif; scroll-behavior: smooth; }
+        body { font-family: 'Tajawal', 'Heebo', 'Noto Sans SC', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; scroll-behavior: smooth; }
         .gallery-item { transition: all 0.3s ease; }
     </style>
 </head>
@@ -44,76 +44,144 @@
 
     <%- include('partials/nav') %>
 
-    <!-- Hero Header -->
-    <header class="hero-bg text-white pt-16 pb-44 px-6 text-center overflow-hidden">
-        <div class="container mx-auto relative z-10 flex flex-col items-center">
-            
-            <!-- Official Logo -->
-            <div class="mb-8 flex justify-center" data-aos="zoom-in">
-                <div class="bg-white p-4 md:p-6 rounded-3xl shadow-2xl inline-block max-w-[280px] sm:max-w-[340px] border-4 border-white/30 transform hover:scale-105 transition-all duration-300">
-                    <img src="/image/logo_assoc.jpg" alt="جمعية مبادرات بلا حدود - Association Initiatives Sans Frontières" class="w-full h-auto object-contain rounded-2xl">
+    <!-- New Hero Section: Luminous, Institutional, Split 2-Column Design -->
+    <header class="hero-clean-bg geo-subtle-pattern pt-12 pb-20 md:py-20 px-6 transition-colors">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+                
+                <!-- Main Content Column -->
+                <div class="lg:col-span-7 text-right" data-aos="fade-up">
+                    
+                    <!-- Motto Badge -->
+                    <div class="section-badge-clean mb-6">
+                        <span>⭐</span>
+                        <span><%= lang.hero_motto %></span>
+                    </div>
+
+                    <!-- Main Stately Heading -->
+                    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-[#0e244d] dark:text-white leading-[1.2] mb-6 tracking-tight">
+                        <%= lang.hero_title_1 %>
+                        <span class="block text-blue-600 dark:text-amber-400 mt-2 font-extrabold"><%= lang.hero_title_2 %></span>
+                    </h1>
+
+                    <!-- Descriptive Subtitle -->
+                    <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 mb-8 max-w-xl leading-relaxed font-medium">
+                        <%= lang.hero_description %>
+                    </p>
+
+                    <!-- Clean Action Buttons Group -->
+                    <div class="flex flex-wrap items-center gap-3.5 mb-10">
+                        <a href="#workshops" class="btn-solid-navy text-sm md:text-base">
+                            <%= lang.explore_btn %>
+                        </a>
+                        <a href="/inscription.php" class="btn-solid-gold text-sm md:text-base">
+                            <%= lang.join_us %>
+                        </a>
+                        <a href="#donate" class="btn-outline-navy text-sm md:text-base">
+                            <span class="text-emerald-600">❤️</span> <%= lang.donate_btn %>
+                        </a>
+                    </div>
+
+                    <!-- Credential badges -->
+                    <div class="pt-6 border-t border-slate-200/80 dark:border-slate-800 flex flex-wrap items-center gap-4 text-xs font-bold text-slate-500 dark:text-slate-400">
+                        <span class="flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span>جمعية مدنية معتمدة بالدروة</span>
+                        </span>
+                        <span class="text-slate-300 dark:text-slate-700">•</span>
+                        <span>دار الشباب الدروة</span>
+                        <span class="text-slate-300 dark:text-slate-700">•</span>
+                        <span>مبادرات شبابية، بيئية، وتضامنية</span>
+                    </div>
+
                 </div>
+
+                <!-- Showcase Column: Official Logo Card & Key Highlights -->
+                <div class="lg:col-span-5" data-aos="fade-left">
+                    <div class="hero-logo-card p-6 sm:p-8 flex flex-col items-center text-center">
+                        <div class="w-full bg-slate-50 dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 mb-6 flex items-center justify-center">
+                            <img src="/image/logo_assoc.jpg" alt="جمعية مبادرات بلا حدود" class="max-h-40 md:max-h-48 w-auto object-contain rounded-xl">
+                        </div>
+                        
+                        <h2 class="text-xl font-black text-[#0e244d] dark:text-white mb-1">
+                            <%= lang.hero_title_2 %>
+                        </h2>
+                        <p class="text-xs font-bold text-amber-600 dark:text-amber-400 mb-6">الجمعية المدنية للتنمية والتضامن - الدروة</p>
+
+                        <!-- Highlights List -->
+                        <div class="w-full space-y-2.5 text-right text-xs font-bold text-slate-600 dark:text-slate-300">
+                            <div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
+                                <span class="text-base">🏛️</span>
+                                <span>المقر الرسمي: دار الشباب الدروة</span>
+                            </div>
+                            <div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
+                                <span class="text-base">🎓</span>
+                                <span>ورشات تكوينية وتأهيلية دورية للشباب</span>
+                            </div>
+                            <div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
+                                <span class="text-base">🤝</span>
+                                <span>ديمقراطية تشاركية ومقترحات مجتمعية</span>
+                            </div>
+                        </div>
+
+                        <!-- Status Indicator -->
+                        <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800/80 w-full flex items-center justify-between text-[11px] font-bold">
+                            <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                <span>الأبواب مفتوحة للانخراط والتطوع</span>
+                            </span>
+                            <a href="/inscription.php" class="text-blue-700 dark:text-amber-400 hover:underline">انضم إلينا ←</a>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-            
-            <span class="inline-block bg-white/10 backdrop-blur-md px-6 py-2 rounded-full text-yellow-400 font-black text-sm md:text-base border border-white/20 mb-6" data-aos="fade-down">
-                ⭐ <%= lang.hero_motto %>
-            </span>
-
-            <h1 class="text-4xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight drop-shadow-lg" data-aos="fade-up">
-                <%= lang.hero_title_1 %><br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-300 to-orange-400"><%= lang.hero_title_2 %></span>
-            </h1>
-            
-            <p class="text-lg md:text-xl text-blue-100 mb-10 max-w-2xl mx-auto leading-relaxed font-medium" data-aos="fade-up" data-aos-delay="100">
-                <%= lang.hero_description %>
-            </p>
-            
-            <div class="flex flex-wrap justify-center gap-4" data-aos="fade-up" data-aos-delay="150">
-                <a href="#workshops" class="bg-white text-blue-950 px-8 py-4 rounded-2xl font-black text-base hover:bg-yellow-400 hover:text-blue-900 transition-all shadow-xl hover:-translate-y-1">
-                    <%= lang.explore_btn %>
-                </a>
-                <a href="#donate" class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-8 py-4 rounded-2xl font-black text-base hover:from-emerald-400 hover:to-teal-500 transition-all shadow-xl hover:-translate-y-1">
-                    ❤️ <%= lang.donate_btn %>
-                </a>
-                <a href="/inscription.php" class="bg-yellow-400 text-blue-950 px-8 py-4 rounded-2xl font-black text-base hover:bg-yellow-300 transition-all shadow-xl hover:-translate-y-1">
-                    <%= lang.join_us %>
-                </a>
-            </div>
-
-        </div>
-
-        <div class="absolute bottom-0 left-0 w-full overflow-hidden leading-none z-0">
-            <svg class="relative block w-full h-[120px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="currentColor" class="text-slate-50 dark:text-gray-950"></path>
-                <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="currentColor" class="text-slate-50 dark:text-gray-950"></path>
-                <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="currentColor" class="text-slate-50 dark:text-gray-950"></path>
-            </svg>
         </div>
     </header>
 
-    <!-- 1. Live Impact Metrics (إحصائيات الأثر المجتمعي) -->
-    <section class="py-12 -mt-24 container mx-auto px-6 relative z-20" data-aos="fade-up">
-        <div class="bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-2xl border border-gray-100 dark:border-gray-800 p-8 md:p-10">
-            <div class="text-center mb-8">
-                <span class="text-xs font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Impact Metrics</span>
-                <h2 class="text-2xl md:text-3xl font-black text-blue-950 dark:text-white mt-1"><%= lang.impact_title %></h2>
-            </div>
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
-                <div class="p-4 rounded-2xl bg-blue-50/60 dark:bg-gray-800/60 border border-blue-100 dark:border-gray-700">
-                    <p class="text-3xl md:text-5xl font-black text-blue-900 dark:text-yellow-400">+1,850</p>
-                    <p class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-300 mt-2"><%= lang.impact_beneficiaries %></p>
+    <!-- 1. Executive Impact Metrics (إحصائيات الأثر المجتمعي) -->
+    <section class="py-10 bg-slate-50 dark:bg-slate-900/40 border-b border-slate-200 dark:border-slate-800">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 text-center" data-aos="fade-up">
+                <!-- Beneficiaries -->
+                <div class="clean-card p-6 flex flex-col items-center justify-center">
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 flex items-center justify-center text-xl mb-3">
+                        👥
+                    </div>
+                    <p class="text-3xl md:text-4xl font-black text-[#0e244d] dark:text-amber-400 min-h-[44px] flex items-center justify-center tracking-tight">
+                        <%= (locals.impact_stats && locals.impact_stats.beneficiaries) ? locals.impact_stats.beneficiaries : '—' %>
+                    </p>
+                    <p class="text-xs md:text-sm font-bold text-slate-600 dark:text-slate-300 mt-1"><%= lang.impact_beneficiaries %></p>
                 </div>
-                <div class="p-4 rounded-2xl bg-emerald-50/60 dark:bg-gray-800/60 border border-emerald-100 dark:border-gray-700">
-                    <p class="text-3xl md:text-5xl font-black text-emerald-600 dark:text-emerald-400">+620</p>
-                    <p class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-300 mt-2"><%= lang.impact_hours %></p>
+                <!-- Volunteer Hours -->
+                <div class="clean-card p-6 flex flex-col items-center justify-center">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl mb-3">
+                        ⏱️
+                    </div>
+                    <p class="text-3xl md:text-4xl font-black text-emerald-600 dark:text-emerald-400 min-h-[44px] flex items-center justify-center tracking-tight">
+                        <%= (locals.impact_stats && locals.impact_stats.volunteer_hours) ? locals.impact_stats.volunteer_hours : '—' %>
+                    </p>
+                    <p class="text-xs md:text-sm font-bold text-slate-600 dark:text-slate-300 mt-1"><%= lang.impact_hours %></p>
                 </div>
-                <div class="p-4 rounded-2xl bg-amber-50/60 dark:bg-gray-800/60 border border-amber-100 dark:border-gray-700">
-                    <p class="text-3xl md:text-5xl font-black text-amber-600 dark:text-amber-400">+450</p>
-                    <p class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-300 mt-2"><%= lang.impact_trees %></p>
+                <!-- Planted Trees -->
+                <div class="clean-card p-6 flex flex-col items-center justify-center">
+                    <div class="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl mb-3">
+                        🌳
+                    </div>
+                    <p class="text-3xl md:text-4xl font-black text-amber-600 dark:text-amber-400 min-h-[44px] flex items-center justify-center tracking-tight">
+                        <%= (locals.impact_stats && locals.impact_stats.trees_planted) ? locals.impact_stats.trees_planted : '—' %>
+                    </p>
+                    <p class="text-xs md:text-sm font-bold text-slate-600 dark:text-slate-300 mt-1"><%= lang.impact_trees %></p>
                 </div>
-                <div class="p-4 rounded-2xl bg-indigo-50/60 dark:bg-gray-800/60 border border-indigo-100 dark:border-gray-700">
-                    <p class="text-3xl md:text-5xl font-black text-indigo-600 dark:text-indigo-400">+24</p>
-                    <p class="text-xs md:text-sm font-bold text-gray-600 dark:text-gray-300 mt-2"><%= lang.impact_workshops %></p>
+                <!-- Training Workshops -->
+                <div class="clean-card p-6 flex flex-col items-center justify-center">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl mb-3">
+                        🎓
+                    </div>
+                    <p class="text-3xl md:text-4xl font-black text-indigo-600 dark:text-indigo-400 min-h-[44px] flex items-center justify-center tracking-tight">
+                        <%= (locals.impact_stats && locals.impact_stats.workshops_count) ? locals.impact_stats.workshops_count : '—' %>
+                    </p>
+                    <p class="text-xs md:text-sm font-bold text-slate-600 dark:text-slate-300 mt-1"><%= lang.impact_workshops %></p>
                 </div>
             </div>
         </div>
@@ -121,100 +189,160 @@
 
     <!-- 2. About & President Preview Cards -->
     <section id="about-section" class="py-16 container mx-auto px-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-            <div data-aos="fade-up" class="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-xl shadow-blue-900/5 border border-gray-100 dark:border-gray-800 flex flex-col justify-between">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Card 1: About the Association -->
+            <div data-aos="fade-up" class="clean-card p-8 md:p-10 flex flex-col justify-between relative overflow-hidden">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-[#0e244d]"></div>
                 <div>
-                    <h2 class="text-3xl font-black text-blue-900 dark:text-yellow-400 mb-6 pb-2 border-b-2 border-yellow-400 inline-block">
-                        <a href="/about_details.php" class="hover:text-blue-700 dark:hover:text-yellow-300 transition-colors"><%= lang.about_title %></a>
+                    <div class="flex items-center justify-between mb-5">
+                        <span class="section-badge-clean">
+                            <span>🏛️</span>
+                            <span><%= lang.our_identity %></span>
+                        </span>
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-black text-[#0e244d] dark:text-white mb-4">
+                        <a href="/about_details.php" class="hover:text-blue-700 dark:hover:text-amber-400 transition-colors"><%= lang.about_title %></a>
                     </h2>
-                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-8 text-base md:text-lg">
+                    <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-8 text-base font-medium">
                         <%= lang.about_desc %>
                     </p>
                 </div>
-                <a href="/about_details.php" class="w-full bg-[#122a4e] text-white py-4 rounded-2xl font-black text-center block hover:bg-blue-900 transition-all shadow-lg"><%= lang.read_more %></a>
+                <a href="/about_details.php" class="btn-solid-navy w-full py-3 rounded-xl text-center text-sm shadow-sm">
+                    <%= lang.read_more %> ←
+                </a>
             </div>
 
-            <div class="bg-white dark:bg-gray-900 p-10 rounded-[2.5rem] shadow-xl shadow-blue-900/5 border border-gray-100 dark:border-gray-800 flex flex-col justify-between" data-aos="fade-up" data-aos-delay="100">
+            <!-- Card 2: President Word -->
+            <div class="clean-card p-8 md:p-10 flex flex-col justify-between relative overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-amber-500"></div>
                 <div>
-                    <h2 class="text-3xl font-black text-blue-900 dark:text-yellow-400 mb-6 pb-2 border-b-2 border-yellow-400 inline-block">
-                        <a href="/president_details.php" class="hover:text-blue-700 dark:hover:text-yellow-300 transition-colors"><%= lang.president_title %></a>
+                    <div class="flex items-center justify-between mb-5">
+                        <span class="section-badge-clean">
+                            <span>👤</span>
+                            <span><%= lang.president_note %></span>
+                        </span>
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-black text-[#0e244d] dark:text-white mb-4">
+                        <a href="/president_details.php" class="hover:text-blue-700 dark:hover:text-amber-400 transition-colors"><%= lang.president_title %></a>
                     </h2>
-                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-8 text-base md:text-lg">
+                    <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-8 text-base font-medium">
                         <%= lang.president_desc %>
                     </p>
                 </div>
-                <a href="/president_details.php" class="w-full bg-[#122a4e] text-white py-4 rounded-2xl font-black text-center block hover:bg-blue-900 transition-all shadow-lg"><%= lang.read_more %></a>
+                <a href="/president_details.php" class="btn-outline-navy w-full py-3 rounded-xl text-center text-sm shadow-sm">
+                    <%= lang.read_more %> ←
+                </a>
             </div>
         </div>
     </section>
 
     <!-- 3. Workshops & Training Opportunities (الورشات والتكوينات والتطوع) -->
-    <section id="workshops" class="py-16 bg-blue-50/50 dark:bg-gray-900/40 border-y border-gray-200/60 dark:border-gray-800 transition-colors">
+    <section id="workshops" class="py-16 bg-slate-50/70 dark:bg-slate-900/30 border-y border-slate-200 dark:border-slate-800 transition-colors">
         <div class="container mx-auto px-6">
-            <div class="mb-14 text-center" data-aos="fade-up">
-                <span class="text-xs font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Free Training Programs</span>
-                <h2 class="text-3xl md:text-4xl font-black text-blue-950 dark:text-white mt-1"><%= lang.workshops_title %></h2>
-                <p class="text-gray-500 dark:text-gray-400 text-base max-w-xl mx-auto mt-2"><%= lang.workshops_subtitle %></p>
-                <div class="h-1.5 w-24 bg-gradient-to-r from-blue-600 to-yellow-400 mx-auto rounded-full mt-4"></div>
+            <div class="mb-12 text-center" data-aos="fade-up">
+                <span class="section-badge-clean">
+                    <span>🎓</span>
+                    <span>Free Training Programs</span>
+                </span>
+                <h2 class="text-3xl md:text-4xl font-black text-[#0e244d] dark:text-white mt-3"><%= lang.workshops_title %></h2>
+                <p class="text-slate-500 dark:text-slate-400 text-sm md:text-base max-w-xl mx-auto mt-2"><%= lang.workshops_subtitle %></p>
+                <div class="clean-divider">
+                    <div class="clean-divider-line"></div>
+                    <div class="clean-divider-diamond"></div>
+                    <div class="clean-divider-line"></div>
+                </div>
                 
-                <!-- Members Only Workshop Proposal CTA -->
+                <!-- Action CTAs for Admin & Members -->
                 <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
-                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-blue-100 dark:bg-blue-950 text-blue-900 dark:text-blue-200 border border-blue-200 dark:border-blue-800">
-                        🔒 <%= currentLang === 'en' ? 'Members Only' : 'مخصص للمنخرطين' %>
-                    </span>
-                    <a href="<%= locals.user ? '/espace_membre.php#publish-workshop' : '/login.php?msg=members_only' %>" class="inline-flex items-center gap-2 bg-blue-900 hover:bg-blue-950 text-white text-xs sm:text-sm font-black px-5 py-2.5 rounded-xl shadow-md transition hover:-translate-y-0.5">
-                        <span>📢</span>
-                        <span><%= currentLang === 'en' ? 'Propose an Activity / Workshop' : 'اقتراح أو نشر نشاط / ورشة (خاص بالأعضاء 👤)' %></span>
-                    </a>
+                    <% if (locals.user && (locals.user.role === 'admin' || locals.user.role === 'president')) { %>
+                        <a href="/admin.php#workshops-tab" class="inline-flex items-center gap-2 bg-[#0e244d] hover:bg-slate-800 text-amber-300 text-xs sm:text-sm font-black px-5 py-2.5 rounded-xl shadow-md transition border border-amber-400/30">
+                            <span>➕</span>
+                            <span>برمجة ونشر ورشة أو تدريب جديد (الإدارة)</span>
+                        </a>
+                    <% } else { %>
+                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 dark:bg-slate-800 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-slate-700">
+                            🔒 <%= lang.members_only %>
+                        </span>
+                        <a href="<%= locals.user ? '/espace_membre.php#publish-workshop' : '/login.php?msg=members_only' %>" class="inline-flex items-center gap-2 bg-[#0e244d] hover:bg-slate-800 text-amber-300 text-xs sm:text-sm font-bold px-4 py-2 rounded-lg shadow-sm transition">
+                            <span>📢</span>
+                            <span><%= lang.propose_workshop_btn %></span>
+                        </a>
+                    <% } %>
                 </div>
             </div>
 
             <% if ((workshops || []).length === 0) { %>
-                <div class="bg-white dark:bg-gray-900 rounded-[2.5rem] p-12 text-center border border-gray-100 dark:border-gray-800 max-w-xl mx-auto shadow-sm" data-aos="fade-up">
-                    <div class="w-16 h-16 bg-blue-50 dark:bg-gray-800 text-blue-900 dark:text-yellow-400 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">
+                <div class="clean-card p-10 text-center max-w-xl mx-auto" data-aos="fade-up">
+                    <div class="w-14 h-14 bg-amber-50 dark:bg-slate-800 text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl">
                         🎓
                     </div>
-                    <h3 class="text-xl font-black text-blue-950 dark:text-white mb-2">
-                        <%= currentLang === 'en' ? 'No Workshops Scheduled Currently' : 'لا توجد ورشات مبرمجة حالياً' %>
+                    <h3 class="text-lg font-black text-[#0e244d] dark:text-white mb-2">
+                        <%= lang.no_workshops %>
                     </h3>
-                    <p class="text-gray-500 dark:text-gray-400 text-xs md:text-sm leading-relaxed max-w-md mx-auto">
-                        <%= currentLang === 'en' 
-                            ? 'Upcoming capacity building workshops and training opportunities at Deroua Youth Center will be published here soon.' 
-                            : 'سيتم الإعلان عن جدول الدورات التكوينية والورشات التأهيلية القادمة بدار الشباب دروة قريباً.' %>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs md:text-sm leading-relaxed max-w-md mx-auto mb-6">
+                        <%= lang.no_workshops_desc %>
                     </p>
+                    <% if (locals.user && (locals.user.role === 'admin' || locals.user.role === 'president')) { %>
+                        <a href="/admin.php#workshops-tab" class="btn-solid-navy inline-flex items-center gap-2 px-6 py-3 rounded-xl font-black text-xs text-amber-300 shadow-md hover:scale-105 transition">
+                            <span>➕</span>
+                            <span>إضافة وبرمجة ورشة أو نشاط تدريبي الآن</span>
+                        </a>
+                    <% } else if (locals.user) { %>
+                        <a href="/espace_membre.php#publish-workshop" class="btn-solid-navy inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-xs text-amber-300 shadow-sm transition">
+                            <span>📢</span>
+                            <span>اقتراح نشاط أو دورة تدريبية للإدارة</span>
+                        </a>
+                    <% } else { %>
+                        <a href="/login.php" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs text-[#0e244d] dark:text-amber-400 bg-slate-100 dark:bg-slate-800 hover:bg-[#0e244d] hover:text-white transition">
+                            <span>🔐</span>
+                            <span>تسجيل الدخول (للإدارة والأعضاء) لإضافة ورشة</span>
+                        </a>
+                    <% } %>
                 </div>
             <% } else { %>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <% workshops.forEach(function(ws) { %>
-                        <div class="bg-white dark:bg-gray-900 rounded-[2rem] overflow-hidden shadow-xl border border-gray-100 dark:border-gray-800 flex flex-col hover:-translate-y-1 transition-all" data-aos="fade-up">
-                            <div class="relative h-48 overflow-hidden bg-gray-100">
-                                <img src="<%= ws.image %>" class="w-full h-full object-cover" alt="<%= ws.title %>">
-                                <span class="absolute top-4 <%= currentLang === 'ar' ? 'right-4' : 'left-4' %> bg-blue-950/90 text-white text-xs font-bold px-3 py-1.5 rounded-xl backdrop-blur-sm">
-                                    <%= ws.category %>
-                                </span>
-                            </div>
+                        <div class="clean-card overflow-hidden flex flex-col" data-aos="fade-up">
+                            <% if (ws.image) { %>
+                                <div class="relative h-48 overflow-hidden bg-slate-100 dark:bg-slate-800">
+                                    <img src="<%= ws.image %>" class="w-full h-full object-cover" alt="<%= ws.title %>">
+                                    <span class="absolute top-3 <%= lang.direction === 'rtl' ? 'right-3' : 'left-3' %> bg-[#0e244d]/90 text-amber-300 text-xs font-black px-3 py-1 rounded-lg backdrop-blur-sm shadow border border-amber-400/20">
+                                        <%= ws.category %>
+                                    </span>
+                                </div>
+                            <% } else { %>
+                                <div class="p-5 pb-0 flex items-center justify-between">
+                                    <span class="bg-[#0e244d]/10 dark:bg-slate-800 text-[#0e244d] dark:text-amber-400 text-xs font-black px-3 py-1 rounded-lg border border-[#0e244d]/15 dark:border-slate-700">
+                                        <%= ws.category %>
+                                    </span>
+                                    <span class="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                        <span>مفتوح للتسجيل</span>
+                                    </span>
+                                </div>
+                            <% } %>
                             <div class="p-6 flex-grow flex flex-col">
-                                <h3 class="text-xl font-black text-blue-950 dark:text-white mb-2 leading-snug"><%= ws.title %></h3>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-4 leading-relaxed"><%= ws.description %></p>
+                                <h3 class="text-lg font-black text-[#0e244d] dark:text-white mb-2 leading-snug"><%= ws.title %></h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 leading-relaxed"><%= ws.description %></p>
                                 
-                                <div class="text-xs font-bold text-gray-600 dark:text-gray-300 space-y-1.5 mb-6">
+                                <div class="text-xs font-bold text-slate-600 dark:text-slate-300 space-y-1.5 mb-6">
                                     <p class="flex items-center gap-2">📅 <span><%= ws.date %></span></p>
                                     <p class="flex items-center gap-2">📍 <span><%= ws.location %></span></p>
                                     <p class="flex items-center gap-2">👤 <span><%= ws.coach %></span></p>
                                 </div>
 
                                 <!-- Seats progress -->
-                                <div class="mt-auto mb-6">
-                                    <div class="flex justify-between text-xs font-black mb-1">
+                                <div class="mt-auto mb-5">
+                                    <div class="flex justify-between text-xs font-bold mb-1">
                                         <span class="text-emerald-600 dark:text-emerald-400"><%= (ws.seats_total - ws.seats_taken) %> <%= lang.workshop_seats_left %></span>
-                                        <span class="text-gray-400"><%= ws.seats_taken %> / <%= ws.seats_total %></span>
+                                        <span class="text-slate-400"><%= ws.seats_taken %> / <%= ws.seats_total %></span>
                                     </div>
-                                    <div class="w-full bg-gray-100 dark:bg-gray-800 h-2.5 rounded-full overflow-hidden">
+                                    <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
                                         <div class="bg-emerald-500 h-full rounded-full" style="width: <%= Math.round((ws.seats_taken / ws.seats_total) * 100) %>%;"></div>
                                     </div>
                                 </div>
 
-                                <button type="button" onclick="openWorkshopModal('<%= ws.id %>', '<%= ws.title %>')" class="w-full bg-[#122a4e] text-white py-3 rounded-xl font-black text-sm hover:bg-blue-900 transition shadow-md">
+                                <button type="button" onclick="openWorkshopModal('<%= ws.id %>', '<%= ws.title %>')" class="btn-solid-navy w-full py-2.5 rounded-xl font-black text-xs text-amber-300 shadow-sm">
                                     ✍️ <%= lang.workshop_register %>
                                 </button>
                                 <div class="mt-2.5 flex items-center justify-center gap-3 text-xs">
@@ -232,57 +360,62 @@
 
     <!-- 4. Participatory Proposals & Member Voting (المبادرات التشاركية والتصويت) -->
     <section id="proposals" class="py-16 container mx-auto px-6">
-        <div class="mb-14 text-center" data-aos="fade-up">
-            <span class="text-xs font-black uppercase tracking-widest text-blue-600 dark:text-blue-400">Participatory Democracy</span>
-            <h2 class="text-3xl md:text-4xl font-black text-blue-950 dark:text-white mt-1"><%= lang.proposals_title %></h2>
-            <p class="text-gray-500 dark:text-gray-400 text-base max-w-xl mx-auto mt-2"><%= lang.proposals_subtitle %></p>
-            <div class="h-1.5 w-24 bg-gradient-to-r from-blue-600 to-yellow-400 mx-auto rounded-full mt-4"></div>
+        <div class="mb-12 text-center" data-aos="fade-up">
+            <span class="section-badge-clean">
+                <span>💡</span>
+                <span>Participatory Democracy</span>
+            </span>
+            <h2 class="text-3xl md:text-4xl font-black text-[#0e244d] dark:text-white mt-3"><%= lang.proposals_title %></h2>
+            <p class="text-slate-500 dark:text-slate-400 text-sm md:text-base max-w-xl mx-auto mt-2"><%= lang.proposals_subtitle %></p>
+            <div class="clean-divider">
+                <div class="clean-divider-line"></div>
+                <div class="clean-divider-diamond"></div>
+                <div class="clean-divider-line"></div>
+            </div>
         </div>
 
         <% if ((proposals || []).length === 0) { %>
-            <div class="bg-white dark:bg-gray-900 rounded-[2.5rem] p-12 text-center border border-gray-100 dark:border-gray-800 max-w-xl mx-auto shadow-sm" data-aos="fade-up">
-                <div class="w-16 h-16 bg-amber-50 dark:bg-gray-800 text-amber-500 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">
+            <div class="clean-card p-10 text-center max-w-xl mx-auto" data-aos="fade-up">
+                <div class="w-14 h-14 bg-amber-50 dark:bg-slate-800 text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl">
                     💡
                 </div>
-                <h3 class="text-xl font-black text-blue-950 dark:text-white mb-2">
-                    <%= currentLang === 'en' ? 'No Community Proposals Open for Voting' : 'لا توجد مقترحات تصويت حالياً' %>
+                <h3 class="text-lg font-black text-[#0e244d] dark:text-white mb-2">
+                    <%= lang.no_proposals %>
                 </h3>
-                <p class="text-gray-500 dark:text-gray-400 text-xs md:text-sm leading-relaxed max-w-md mx-auto mb-6">
-                    <%= currentLang === 'en' 
-                        ? 'Be the first to submit a community initiative for Deroua and gather support from residents!' 
-                        : 'كن أول من يطرح فكرة أو مبادرة مجتمعية هادفة لمدينة الدروة واجمع أصوات وتأييد الساكنة والشباب.' %>
+                <p class="text-slate-500 dark:text-slate-400 text-xs md:text-sm leading-relaxed max-w-md mx-auto mb-6">
+                    <%= lang.no_proposals_desc %>
                 </p>
-                <button type="button" onclick="openProposalModal()" class="bg-[#122a4e] text-white px-8 py-3.5 rounded-2xl font-black text-xs hover:bg-blue-900 transition shadow-lg">
+                <button type="button" onclick="openProposalModal()" class="btn-solid-navy px-6 py-3 rounded-xl font-bold text-xs shadow-sm">
                     💡 <%= lang.submit_idea %>
                 </button>
             </div>
         <% } else { %>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <% proposals.forEach(function(prop) { %>
-                    <div class="bg-white dark:bg-gray-900 p-8 rounded-[2rem] shadow-xl border border-gray-100 dark:border-gray-800 flex flex-col justify-between" data-aos="fade-up">
+                    <div class="clean-card p-6 flex flex-col justify-between" data-aos="fade-up">
                         <div>
-                            <div class="flex justify-between items-start mb-4">
-                                <span class="bg-blue-50 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 text-xs px-3 py-1 rounded-lg font-bold">
+                            <div class="flex justify-between items-start mb-3">
+                                <span class="bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs px-2.5 py-1 rounded-lg font-bold">
                                     <%= prop.category %>
                                 </span>
-                                <span class="text-xs text-gray-400 font-bold">بواسطة: <%= prop.author %></span>
+                                <span class="text-[11px] text-slate-400 font-medium">بواسطة: <%= prop.author %></span>
                             </div>
-                            <h3 class="text-xl font-black text-blue-950 dark:text-white mb-3"><%= prop.title %></h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
+                            <h3 class="text-lg font-black text-[#0e244d] dark:text-white mb-2"><%= prop.title %></h3>
+                            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
                                 <%= prop.description %>
                             </p>
                         </div>
 
-                        <div class="pt-6 border-t border-gray-100 dark:border-gray-800 flex justify-between items-center">
-                            <span class="text-lg font-black text-blue-900 dark:text-yellow-400 flex items-center gap-1.5">
+                        <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                            <span class="text-base font-black text-[#0e244d] dark:text-amber-400 flex items-center gap-1.5">
                                 <span id="vote-count-<%= prop.id %>"><%= prop.votes %></span>
-                                <span class="text-xs text-gray-400 font-normal">صوت</span>
+                                <span class="text-xs text-slate-400 font-normal">صوت</span>
                             </span>
                             <div class="flex items-center gap-2">
-                                <a href="https://api.whatsapp.com/send?text=<%= encodeURIComponent('صوّت على مبادرة: ' + prop.title + ' بجمعية مبادرات بلا حدود') %>" target="_blank" rel="noopener noreferrer" title="<%= lang.share_whatsapp %>" class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 flex items-center justify-center hover:bg-emerald-100 transition">
+                                <a href="https://api.whatsapp.com/send?text=<%= encodeURIComponent('صوّت على مبادرة: ' + prop.title + ' بجمعية مبادرات بلا حدود') %>" target="_blank" rel="noopener noreferrer" title="<%= lang.share_whatsapp %>" class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 flex items-center justify-center hover:bg-emerald-100 transition text-xs">
                                     💬
                                 </a>
-                                <button type="button" onclick="castVote(<%= prop.id %>)" id="vote-btn-<%= prop.id %>" class="bg-gradient-to-r from-yellow-400 to-amber-500 text-blue-950 px-4 py-2 rounded-xl text-xs font-black shadow hover:shadow-md transition">
+                                <button type="button" onclick="castVote(<%= prop.id %>)" id="vote-btn-<%= prop.id %>" class="btn-solid-gold px-3.5 py-1.5 rounded-lg text-xs font-black shadow-sm">
                                     👍 <%= lang.vote_btn %>
                                 </button>
                             </div>
@@ -291,73 +424,91 @@
                 <% }); %>
             </div>
 
-            <div class="mt-12 text-center" data-aos="fade-up">
-                <button type="button" onclick="openProposalModal()" class="bg-[#122a4e] text-white px-8 py-4 rounded-2xl font-black text-base hover:bg-blue-900 transition shadow-xl">
+            <div class="mt-10 text-center" data-aos="fade-up">
+                <button type="button" onclick="openProposalModal()" class="btn-solid-navy px-7 py-3 rounded-xl font-bold text-sm shadow-sm">
                     💡 <%= lang.submit_idea %>
                 </button>
             </div>
         <% } %>
     </section>
 
-    <!-- 5. Latest Activities & Initiatives (Empty by User Request) -->
-    <main id="activities" class="py-16 bg-gray-50/70 dark:bg-gray-900/50 border-y border-gray-200/60 dark:border-gray-800 transition-colors">
+    <!-- 5. Latest Activities & Initiatives -->
+    <main id="activities" class="py-16 bg-slate-50/70 dark:bg-slate-900/30 border-y border-slate-200 dark:border-slate-800 transition-colors">
         <div class="container mx-auto px-6">
-            <div class="mb-14 text-center" data-aos="fade-up">
-                <span class="text-xs font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Official Portal</span>
-                <h2 class="text-3xl md:text-5xl font-black text-blue-950 dark:text-white mb-4"><%= lang.activities_title %></h2>
-                <div class="h-1.5 w-32 bg-gradient-to-r from-blue-600 to-yellow-400 mx-auto rounded-full"></div>
+            <div class="mb-12 text-center" data-aos="fade-up">
+                <span class="section-badge-clean">
+                    <span>🌱</span>
+                    <span>Official Portal</span>
+                </span>
+                <h2 class="text-3xl md:text-4xl font-black text-[#0e244d] dark:text-white mt-3 mb-2"><%= lang.activities_title %></h2>
+                <div class="clean-divider">
+                    <div class="clean-divider-line"></div>
+                    <div class="clean-divider-diamond"></div>
+                    <div class="clean-divider-line"></div>
+                </div>
 
                 <!-- Members Only Article Publishing CTA -->
                 <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
-                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-900 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-800">
-                        🔒 <%= currentLang === 'en' ? 'Members Only' : 'مخصص للمنخرطين' %>
+                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 dark:bg-slate-800 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-slate-700">
+                        🔒 <%= lang.members_only %>
                     </span>
-                    <a href="<%= locals.user ? '/espace_membre.php#publish-article' : '/login.php?msg=members_only' %>" class="inline-flex items-center gap-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs sm:text-sm font-black px-5 py-2.5 rounded-xl shadow-md transition hover:-translate-y-0.5">
+                    <a href="<%= locals.user ? '/espace_membre.php#publish-article' : '/login.php?msg=members_only' %>" class="inline-flex items-center gap-2 bg-[#0e244d] hover:bg-slate-800 text-white text-xs sm:text-sm font-bold px-4 py-2 rounded-lg shadow-sm transition">
                         <span>✍️</span>
-                        <span><%= currentLang === 'en' ? 'Publish Article / Initiative' : 'نشر مقال أو مبادرة (خاص بالأعضاء 👤)' %></span>
+                        <span><%= lang.publish_initiative_cta %></span>
                     </a>
                 </div>
             </div>
 
             <% if (articles.length === 0) { %>
-                <div class="bg-white dark:bg-gray-900 p-12 md:p-16 rounded-[2.5rem] shadow-xl shadow-blue-900/5 border border-gray-100 dark:border-gray-800 max-w-2xl mx-auto text-center" data-aos="fade-up">
-                    <div class="w-20 h-20 bg-blue-50 dark:bg-gray-800 text-blue-900 dark:text-yellow-400 rounded-3xl flex items-center justify-center mx-auto mb-6 text-3xl shadow-inner border border-blue-100 dark:border-gray-700">
+                <div class="clean-card p-10 max-w-xl mx-auto text-center" data-aos="fade-up">
+                    <div class="w-14 h-14 bg-amber-50 dark:bg-slate-800 text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl">
                         🌱
                     </div>
-                    <h3 class="text-2xl font-black text-blue-950 dark:text-white mb-3"><%= lang.activities_empty_title %></h3>
-                    <p class="text-gray-500 dark:text-gray-400 font-medium leading-relaxed mb-8 text-base max-w-lg mx-auto">
+                    <h3 class="text-lg font-black text-[#0e244d] dark:text-white mb-2"><%= lang.activities_empty_title %></h3>
+                    <p class="text-slate-500 dark:text-slate-400 font-medium leading-relaxed mb-6 text-xs md:text-sm max-w-md mx-auto">
                         <%= lang.activities_empty_desc %>
                     </p>
-                    <div class="flex flex-wrap justify-center gap-4">
-                        <a href="<%= locals.user ? '/espace_membre.php#publish-article' : '/login.php?msg=members_only' %>" class="bg-[#122a4e] text-white px-8 py-3.5 rounded-2xl font-black text-sm hover:bg-blue-900 transition-all shadow-lg shadow-blue-900/20 hover:-translate-y-0.5">
+                    <div class="flex flex-wrap justify-center gap-3">
+                        <a href="<%= locals.user ? '/espace_membre.php#publish-article' : '/login.php?msg=members_only' %>" class="btn-solid-navy px-6 py-2.5 rounded-xl font-bold text-xs shadow-sm">
                             <%= lang.propose_initiative %>
                         </a>
-                        <a href="/contact.php" class="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-6 py-3.5 rounded-2xl font-bold text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                        <a href="/contact.php" class="btn-outline-navy px-5 py-2.5 rounded-xl font-bold text-xs">
                             <%= lang.nav_contact %>
                         </a>
                     </div>
                 </div>
             <% } else { %>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <% articles.forEach(function(art) { %>
-                    <article data-aos="fade-up" class="card-modern rounded-[2rem] overflow-hidden flex flex-col bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800">
-                        <div class="relative h-72 overflow-hidden bg-gray-100">
-                            <img src="<%= art.image_article %>" class="w-full h-full object-cover transition-transform duration-1000 hover:scale-110" alt="Article illustration">
-                            <div class="absolute top-6 <%= currentLang === 'ar' ? 'right-6' : 'left-6' %> z-20">
-                                <span class="bg-white/95 dark:bg-gray-900/95 backdrop-blur-md text-blue-900 dark:text-yellow-400 px-5 py-2 rounded-xl text-sm font-black shadow-lg">
-                                    <%= art.category || 'عام' %>
+                    <article data-aos="fade-up" class="clean-card overflow-hidden flex flex-col">
+                        <% if (art.image_article) { %>
+                            <div class="relative h-56 overflow-hidden bg-slate-100 dark:bg-slate-800">
+                                <img src="<%= art.image_article %>" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" alt="Article illustration">
+                                <div class="absolute top-4 <%= currentLang === 'ar' ? 'right-4' : 'left-4' %> z-20">
+                                    <span class="bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm text-[#0e244d] dark:text-amber-400 px-3.5 py-1.5 rounded-lg text-xs font-black shadow border border-slate-200/50 dark:border-slate-800">
+                                        <%= art.category || 'عام' %>
+                                    </span>
+                                </div>
+                            </div>
+                        <% } else { %>
+                            <div class="p-6 pb-2 flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80">
+                                <span class="bg-blue-50 dark:bg-slate-800 text-[#0e244d] dark:text-amber-400 px-3.5 py-1.5 rounded-lg text-xs font-black border border-blue-100/80 dark:border-slate-700">
+                                    <%= art.category || 'مبادرة مجتمعية' %>
+                                </span>
+                                <span class="text-xs text-slate-400 font-bold flex items-center gap-1">
+                                    📅 <span><%= art.date_publication %></span>
                                 </span>
                             </div>
-                        </div>
-                        <div class="p-8 flex-grow flex flex-col">
-                            <p class="text-xs font-bold text-gray-400 mb-4 tracking-widest uppercase">
+                        <% } %>
+                        <div class="p-6 flex-grow flex flex-col">
+                            <p class="text-[11px] font-bold text-slate-400 mb-2 tracking-wider uppercase">
                                 <%= lang.author_prefix %> <%= art.nom_complet %>
                             </p>
-                            <h3 class="text-2xl font-black text-blue-950 dark:text-white mb-4 leading-snug"><%= art.titre %></h3>
-                            <p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-8 line-clamp-3 text-sm">
+                            <h3 class="text-lg font-black text-[#0e244d] dark:text-white mb-2 leading-snug"><%= art.titre %></h3>
+                            <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-6 line-clamp-3 text-xs">
                                 <%= art.contenu.substring(0, 150) %>...
                             </p>
-                            <a href="/article_details.php?id=<%= art.id %>" class="mt-auto block w-full bg-gray-50 dark:bg-gray-800 text-blue-900 dark:text-yellow-400 py-3.5 rounded-xl font-bold text-center hover:bg-blue-900 hover:text-white transition-colors border border-gray-100 dark:border-gray-700">
+                            <a href="/article_details.php?id=<%= art.id %>" class="mt-auto block w-full text-center py-2.5 rounded-xl font-bold text-xs text-[#0e244d] dark:text-amber-400 bg-slate-50 dark:bg-slate-800 hover:bg-[#0e244d] hover:text-white transition-colors border border-slate-200/80 dark:border-slate-700">
                                 <%= lang.view_details %>
                             </a>
                         </div>
@@ -369,29 +520,36 @@
     </main>
 
     <!-- 6. Interactive Media Gallery (معرض الصور والوسائط) -->
-    <section id="gallery" class="py-20 container mx-auto px-6">
+    <section id="gallery" class="py-16 container mx-auto px-6">
         <div class="mb-12 text-center" data-aos="fade-up">
-            <span class="text-xs font-black uppercase tracking-widest text-blue-600 dark:text-blue-400">Media & Archives</span>
-            <h2 class="text-3xl md:text-5xl font-black text-blue-950 dark:text-white mb-3"><%= lang.gallery_title %></h2>
-            <p class="text-gray-500 dark:text-gray-400 max-w-xl mx-auto"><%= lang.gallery_subtitle %></p>
-            <div class="h-1.5 w-24 bg-gradient-to-r from-blue-600 to-yellow-400 mx-auto rounded-full mt-4"></div>
+            <span class="section-badge-clean">
+                <span>📷</span>
+                <span>Media & Archives</span>
+            </span>
+            <h2 class="text-3xl md:text-4xl font-black text-[#0e244d] dark:text-white mt-3 mb-2"><%= lang.gallery_title %></h2>
+            <p class="text-slate-500 dark:text-slate-400 text-sm md:text-base max-w-xl mx-auto"><%= lang.gallery_subtitle %></p>
+            <div class="clean-divider">
+                <div class="clean-divider-line"></div>
+                <div class="clean-divider-diamond"></div>
+                <div class="clean-divider-line"></div>
+            </div>
         </div>
 
         <% if (locals.gallery && gallery.length > 0) { %>
             <!-- Filter Buttons -->
-            <div class="flex flex-wrap justify-center gap-2 mb-10" data-aos="fade-up">
-                <button type="button" onclick="filterGallery('all')" class="gallery-btn active bg-blue-950 text-white px-5 py-2 rounded-xl text-xs font-bold shadow transition" data-filter="all"><%= lang.gallery_all %></button>
-                <button type="button" onclick="filterGallery('social')" class="gallery-btn bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 px-5 py-2 rounded-xl text-xs font-bold transition" data-filter="social"><%= lang.gallery_social %></button>
-                <button type="button" onclick="filterGallery('env')" class="gallery-btn bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 px-5 py-2 rounded-xl text-xs font-bold transition" data-filter="env"><%= lang.gallery_env %></button>
-                <button type="button" onclick="filterGallery('training')" class="gallery-btn bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 px-5 py-2 rounded-xl text-xs font-bold transition" data-filter="training"><%= lang.gallery_training %></button>
-                <button type="button" onclick="filterGallery('sports')" class="gallery-btn bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 px-5 py-2 rounded-xl text-xs font-bold transition" data-filter="sports"><%= lang.gallery_sports %></button>
-                <button type="button" onclick="filterGallery('video')" class="gallery-btn bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 px-5 py-2 rounded-xl text-xs font-bold transition" data-filter="video">🎬 <%= lang.gallery_videos %></button>
+            <div class="flex flex-wrap justify-center gap-2 mb-8" data-aos="fade-up">
+                <button type="button" onclick="filterGallery('all')" class="gallery-btn active bg-[#0e244d] text-amber-300 px-4 py-2 rounded-lg text-xs font-bold shadow-sm transition" data-filter="all"><%= lang.gallery_all %></button>
+                <button type="button" onclick="filterGallery('social')" class="gallery-btn bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 px-4 py-2 rounded-lg text-xs font-bold transition border border-slate-200 dark:border-slate-700" data-filter="social"><%= lang.gallery_social %></button>
+                <button type="button" onclick="filterGallery('env')" class="gallery-btn bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 px-4 py-2 rounded-lg text-xs font-bold transition border border-slate-200 dark:border-slate-700" data-filter="env"><%= lang.gallery_env %></button>
+                <button type="button" onclick="filterGallery('training')" class="gallery-btn bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 px-4 py-2 rounded-lg text-xs font-bold transition border border-slate-200 dark:border-slate-700" data-filter="training"><%= lang.gallery_training %></button>
+                <button type="button" onclick="filterGallery('sports')" class="gallery-btn bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 px-4 py-2 rounded-lg text-xs font-bold transition border border-slate-200 dark:border-slate-700" data-filter="sports"><%= lang.gallery_sports %></button>
+                <button type="button" onclick="filterGallery('video')" class="gallery-btn bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 px-4 py-2 rounded-lg text-xs font-bold transition border border-slate-200 dark:border-slate-700" data-filter="video">🎬 <%= lang.gallery_videos %></button>
             </div>
 
             <!-- Gallery Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="gallery-container">
                 <% gallery.forEach(function(item) { %>
-                    <div class="gallery-item rounded-3xl overflow-hidden shadow-lg group relative bg-gray-900 border border-gray-100 dark:border-gray-800 cursor-pointer" 
+                    <div class="gallery-item clean-card overflow-hidden group relative bg-slate-900 cursor-pointer" 
                          data-category="<%= item.category %>" 
                          data-is-video="<%= item.isVideo ? 'true' : 'false' %>"
                          data-image="<%= item.image %>"
@@ -405,74 +563,82 @@
                         
                         <% if (item.isVideo) { %>
                             <div class="absolute inset-0 flex items-center justify-center">
-                                <div class="w-16 h-16 rounded-full bg-red-600/90 text-white flex items-center justify-center text-2xl shadow-2xl group-hover:scale-110 transition border-2 border-white/80">
+                                <div class="w-14 h-14 rounded-full bg-red-600/90 text-white flex items-center justify-center text-xl shadow-lg group-hover:scale-110 transition border-2 border-white/80">
                                     ▶
                                 </div>
                             </div>
                         <% } else { %>
-                            <div class="absolute top-4 <%= currentLang === 'ar' ? 'left-4' : 'right-4' %> opacity-0 group-hover:opacity-100 transition-opacity bg-black/50 text-white p-2 rounded-xl text-sm backdrop-blur-sm">
-                                🔍 <%= currentLang === 'en' ? 'Enlarge' : 'تكبير' %>
+                            <div class="absolute top-3 <%= lang.direction === 'rtl' ? 'left-3' : 'right-3' %> opacity-0 group-hover:opacity-100 transition-opacity bg-black/60 text-white p-1.5 px-2.5 rounded-lg text-xs backdrop-blur-sm">
+                                🔍 <%= lang.enlarge %>
                             </div>
                         <% } %>
 
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent flex flex-col justify-end p-6">
-                            <span class="text-yellow-400 text-xs font-black uppercase mb-1 flex items-center gap-1">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent flex flex-col justify-end p-5">
+                            <span class="text-amber-400 text-xs font-black mb-1 flex items-center gap-1">
                                 <span>📍 <%= item.location %></span>
                                 <% if (item.isVideo) { %>
                                     <span class="bg-red-600 text-white text-[10px] px-2 py-0.5 rounded-full mr-2">فيديو</span>
                                 <% } %>
                             </span>
-                            <h4 class="text-white text-base font-bold leading-snug"><%= item.title %></h4>
+                            <h4 class="text-white text-sm font-bold leading-snug"><%= item.title %></h4>
                         </div>
                     </div>
                 <% }); %>
             </div>
         <% } else { %>
             <!-- Clean Empty Gallery Placeholder -->
-            <div class="max-w-2xl mx-auto bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-3xl p-12 text-center shadow-sm" data-aos="fade-up">
-                <div class="w-16 h-16 rounded-2xl bg-blue-50 dark:bg-gray-800 text-blue-900 dark:text-yellow-400 flex items-center justify-center text-3xl mx-auto mb-4 shadow-sm">
+            <div class="max-w-xl mx-auto clean-card p-10 text-center" data-aos="fade-up">
+                <div class="w-14 h-14 rounded-2xl bg-amber-50 dark:bg-slate-800 text-amber-600 flex items-center justify-center text-2xl mx-auto mb-3">
                     📷
                 </div>
-                <h3 class="text-xl font-black text-blue-950 dark:text-white mb-2"><%= currentLang === 'en' ? 'Photo Gallery' : 'معرض الصور والوسائط' %></h3>
-                <p class="text-xs text-gray-500 dark:text-gray-400 max-w-md mx-auto leading-relaxed">
-                    <%= currentLang === 'en' ? 'Field activity albums, workshop documentation, and multimedia archives will be published here.' : 'سيتم توثيق وتنزيل ألبومات الصور ومقاطع الفيديو الخاصة بأنشطة وورشات الجمعية الميدانية فور إنجازها.' %>
+                <h3 class="text-lg font-black text-[#0e244d] dark:text-white mb-2"><%= lang.photo_gallery_title %></h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto leading-relaxed">
+                    <%= lang.photo_gallery_desc %>
                 </p>
             </div>
         <% } %>
     </section>
 
     <!-- 7. Support, Donations & Partnerships (بوابة التبرعات والشراكات) -->
-    <section id="donate" class="py-20 container mx-auto px-6">
-        <div class="mb-14 text-center" data-aos="fade-up">
-            <span class="text-xs font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Support & Sponsorship</span>
-            <h2 class="text-3xl md:text-5xl font-black text-blue-950 dark:text-white mb-3"><%= lang.donate_title %></h2>
-            <p class="text-gray-500 dark:text-gray-400 max-w-xl mx-auto"><%= lang.donate_subtitle %></p>
-            <div class="h-1.5 w-24 bg-gradient-to-r from-blue-600 to-yellow-400 mx-auto rounded-full mt-4"></div>
+    <section id="donate" class="py-16 container mx-auto px-6">
+        <div class="mb-12 text-center" data-aos="fade-up">
+            <span class="section-badge-clean">
+                <span>❤️</span>
+                <span>Support & Sponsorship</span>
+            </span>
+            <h2 class="text-3xl md:text-4xl font-black text-[#0e244d] dark:text-white mt-3 mb-2"><%= lang.donate_title %></h2>
+            <p class="text-slate-500 dark:text-slate-400 text-sm md:text-base max-w-xl mx-auto"><%= lang.donate_subtitle %></p>
+            <div class="clean-divider">
+                <div class="clean-divider-line"></div>
+                <div class="clean-divider-diamond"></div>
+                <div class="clean-divider-line"></div>
+            </div>
         </div>
 
-        <div class="max-w-2xl mx-auto mb-16">
+        <div class="max-w-xl mx-auto mb-16">
             
             <!-- In-kind donation, sponsorship & pledge form -->
-            <div class="bg-white dark:bg-gray-900 p-8 md:p-10 rounded-[2.5rem] shadow-xl border border-gray-100 dark:border-gray-800" data-aos="fade-up">
-                <h3 class="text-xl font-black text-blue-950 dark:text-white mb-2"><%= lang.in_kind_donation %></h3>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mb-6"><%= lang.in_kind_desc %></p>
+            <div class="clean-card p-8 md:p-10 relative overflow-hidden" data-aos="fade-up">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-emerald-600"></div>
+                <h3 class="text-lg font-black text-[#0e244d] dark:text-white mb-1"><%= lang.in_kind_donation %></h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mb-6"><%= lang.in_kind_desc %></p>
 
                 <form action="/donate" method="POST" class="space-y-4">
                     <div>
-                        <input type="text" name="donor_name" required placeholder="الاسم الكامل أو اسم المؤسسة" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-3.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="text" name="donor_name" required placeholder="الاسم الكامل أو اسم المؤسسة" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 rounded-xl text-xs sm:text-sm outline-none focus:border-[#0e244d] dark:focus:border-amber-400 font-medium">
                     </div>
                     <div class="grid grid-cols-2 gap-3">
-                        <input type="tel" name="donor_phone" required placeholder="رقم الهاتف" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-3.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500">
-                        <select name="donation_type" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-3.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500 font-bold">
+                        <input type="tel" name="donor_phone" required placeholder="رقم الهاتف" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 rounded-xl text-xs sm:text-sm outline-none focus:border-[#0e244d] dark:focus:border-amber-400 font-medium">
+                        <select name="donation_type" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 rounded-xl text-xs sm:text-sm outline-none focus:border-[#0e244d] dark:focus:border-amber-400 font-bold text-slate-700 dark:text-slate-200">
                             <option value="تبرع عيني">📦 تبرع عيني / مواد</option>
                             <option value="دعم مالي">💵 دعم مالي</option>
                             <option value="شراكة مؤسساتية">🤝 طلب شراكة</option>
                         </select>
                     </div>
                     <div>
-                        <textarea name="notes" placeholder="ملاحظات حول التبرع أو المشروع المستهدف..." class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-3.5 rounded-xl text-sm h-24 outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                        <textarea name="notes" placeholder="ملاحظات حول التبرع أو المشروع المستهدف..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-3 rounded-xl text-xs sm:text-sm h-24 outline-none focus:border-[#0e244d] dark:focus:border-amber-400 font-medium"></textarea>
                     </div>
-                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl font-black text-sm shadow transition">
+                    <button type="submit" class="w-full btn-solid-gold py-3 rounded-xl font-black text-xs sm:text-sm shadow-sm transition">
                         إرسال الإشعار بالدعم / التواصل معنا
                     </button>
                 </form>
@@ -482,14 +648,14 @@
 
         <!-- Institutional Partners Grid -->
         <div class="text-center" data-aos="fade-up">
-            <h3 class="text-lg font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-8"><%= lang.partners_title %></h3>
-            <div class="flex flex-wrap justify-center items-center gap-6 md:gap-10 max-w-4xl mx-auto">
+            <h3 class="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-6"><%= lang.partners_title %></h3>
+            <div class="flex flex-wrap justify-center items-center gap-4 md:gap-6 max-w-4xl mx-auto">
                 <% partners.forEach(function(partner) { %>
-                    <div class="bg-white dark:bg-gray-900 p-5 px-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 flex items-center gap-3">
-                        <span class="text-3xl"><%= partner.icon %></span>
+                    <div class="clean-card p-4 px-5 flex items-center gap-3">
+                        <span class="text-2xl"><%= partner.icon %></span>
                         <div class="text-right">
-                            <p class="font-black text-xs md:text-sm text-blue-950 dark:text-white"><%= partner.name %></p>
-                            <p class="text-[10px] text-gray-400"><%= partner.role %></p>
+                            <p class="font-black text-xs md:text-sm text-[#0e244d] dark:text-white"><%= partner.name %></p>
+                            <p class="text-[10px] text-slate-400"><%= partner.role %></p>
                         </div>
                     </div>
                 <% }); %>
@@ -499,26 +665,26 @@
 
     <!-- Modal: Workshop Registration -->
     <div id="workshop-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="bg-white dark:bg-gray-900 rounded-3xl p-8 max-w-md w-full shadow-2xl border border-gray-100 dark:border-gray-800 animate-in fade-in zoom-in duration-200">
+        <div class="clean-card p-8 max-w-md w-full shadow-2xl relative">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-black text-blue-950 dark:text-white" id="modal-ws-title">التسجيل في الورشة</h3>
-                <button type="button" onclick="closeWorkshopModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-white text-xl">✕</button>
+                <h3 class="text-lg font-black text-[#0e244d] dark:text-white" id="modal-ws-title">التسجيل في الورشة</h3>
+                <button type="button" onclick="closeWorkshopModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-lg">✕</button>
             </div>
             <form action="/workshops/register" method="POST" class="space-y-4">
                 <input type="hidden" name="workshop_id" id="modal-ws-id">
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 mb-1">الاسم الكامل</label>
-                    <input type="text" name="name" required class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-sm outline-none">
+                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">الاسم الكامل</label>
+                    <input type="text" name="name" required class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2.5 rounded-xl text-xs sm:text-sm outline-none focus:border-[#0e244d]">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 mb-1">البريد الإلكتروني</label>
-                    <input type="email" name="email" required class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-sm outline-none">
+                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">البريد الإلكتروني</label>
+                    <input type="email" name="email" required class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2.5 rounded-xl text-xs sm:text-sm outline-none focus:border-[#0e244d]">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 mb-1">رقم الهاتف (واتساب)</label>
-                    <input type="tel" name="phone" required placeholder="06XXXXXXXX" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-sm outline-none">
+                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">رقم الهاتف (واتساب)</label>
+                    <input type="tel" name="phone" required placeholder="06XXXXXXXX" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2.5 rounded-xl text-xs sm:text-sm outline-none focus:border-[#0e244d]">
                 </div>
-                <button type="submit" class="w-full bg-blue-900 hover:bg-blue-800 text-white font-black py-3.5 rounded-xl text-sm transition shadow">
+                <button type="submit" class="w-full btn-solid-navy py-3 rounded-xl text-xs sm:text-sm font-bold transition shadow-sm">
                     تأكيد التسجيل المجاني
                 </button>
             </form>
@@ -527,19 +693,19 @@
 
     <!-- Modal: Proposal Submission -->
     <div id="proposal-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="bg-white dark:bg-gray-900 rounded-3xl p-8 max-w-md w-full shadow-2xl border border-gray-100 dark:border-gray-800">
+        <div class="clean-card p-8 max-w-md w-full shadow-2xl relative">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-black text-blue-950 dark:text-white">تقديم فكرة مشروع تشاركي</h3>
-                <button type="button" onclick="closeProposalModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-white text-xl">✕</button>
+                <h3 class="text-lg font-black text-[#0e244d] dark:text-white">تقديم فكرة مشروع تشاركي</h3>
+                <button type="button" onclick="closeProposalModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-lg">✕</button>
             </div>
             <form action="/proposals/create" method="POST" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 mb-1">عنوان الفكرة أو المبادرة</label>
-                    <input type="text" name="title" required class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-sm outline-none">
+                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">عنوان الفكرة أو المبادرة</label>
+                    <input type="text" name="title" required class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2.5 rounded-xl text-xs sm:text-sm outline-none focus:border-[#0e244d]">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 mb-1">المجال</label>
-                    <select name="category" class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-sm outline-none font-bold">
+                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">المجال</label>
+                    <select name="category" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2.5 rounded-xl text-xs sm:text-sm outline-none font-bold text-slate-700 dark:text-slate-200">
                         <option value="ثقافي وتربوي">ثقافي وتربوي</option>
                         <option value="رياضي وإدماجي">رياضي وإدماجي</option>
                         <option value="بيئي وتطوعي">بيئي وتطوعي</option>
@@ -548,14 +714,14 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 mb-1">تفاصيل الفكرة والأثر المتوقع</label>
-                    <textarea name="description" required class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-sm h-28 outline-none"></textarea>
+                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">تفاصيل الفكرة والأثر المتوقع</label>
+                    <textarea name="description" required class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2.5 rounded-xl text-xs sm:text-sm h-24 outline-none focus:border-[#0e244d]"></textarea>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 mb-1">اسم المقترح(ة)</label>
-                    <input type="text" name="author" value="<%= user ? user.nom_complet : '' %>" required class="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-sm outline-none">
+                    <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">اسم المقترح(ة)</label>
+                    <input type="text" name="author" value="<%= user ? user.nom_complet : '' %>" required class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2.5 rounded-xl text-xs sm:text-sm outline-none focus:border-[#0e244d]">
                 </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-yellow-400 to-amber-500 text-blue-950 font-black py-3.5 rounded-xl text-sm transition shadow">
+                <button type="submit" class="w-full btn-solid-gold py-3 rounded-xl text-xs sm:text-sm font-black transition shadow-sm">
                     طرح الفكرة للتصويت المجتمعي 🚀
                 </button>
             </form>

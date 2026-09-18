@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { 
   getFirestore, 
+  setLogLevel,
   doc, 
   getDoc, 
   getDocs, 
@@ -17,6 +18,35 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Filter out benign Firestore GrpcConnection idle stream disconnect messages
+if (typeof process !== 'undefined' && process.stderr) {
+  const origStderrWrite = process.stderr.write.bind(process.stderr);
+  process.stderr.write = function(chunk, encoding, callback) {
+    const str = typeof chunk === 'string' ? chunk : (chunk ? chunk.toString() : '');
+    if (str.includes('Disconnecting idle stream') || str.includes('Timed out waiting for new targets')) {
+      if (typeof callback === 'function') callback();
+      return true;
+    }
+    return origStderrWrite(chunk, encoding, callback);
+  };
+}
+
+const origConsoleError = console.error.bind(console);
+console.error = function(...args) {
+  const msg = args.map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' ');
+  if (msg.includes('Disconnecting idle stream') || msg.includes('Timed out waiting for new targets')) {
+    return;
+  }
+  origConsoleError(...args);
+};
+
+// Set Firestore log level to silent to prevent streaming RPC noise in server logs
+try {
+  setLogLevel('silent');
+} catch (e) {
+  // ignore
+}
 
 // Operation types conforming to skill guidelines
 export const OperationType = {
@@ -130,6 +160,29 @@ export async function syncAndSeedFirestore(localDb) {
       console.log(`[Firestore] Seeded ${localDb.users.length} user profiles.`);
     }
 
+    // Explicit cleanup: Remove Karim El Boudali (id: 3 / responsable@assoc.ma)
+    const karimIdx = (localDb.users || []).findIndex(u => u.id === 3 || u.email === 'responsable@assoc.ma');
+    if (karimIdx !== -1) {
+      localDb.users.splice(karimIdx, 1);
+    }
+    try {
+      await deleteDoc(doc(firestoreDb, 'users', '3'));
+    } catch (_) {}
+
+    // Explicit name correction: براهيم ايت عدمان
+    const ibrahimUser = (localDb.users || []).find(u => u.email === 'ibrahimaitaddimane@gmail.com');
+    if (ibrahimUser) {
+      ibrahimUser.nom_complet = 'براهيم ايت عدمان';
+      try {
+        const { password, ...safeIbrahim } = ibrahimUser;
+        await setDoc(doc(firestoreDb, 'users', String(ibrahimUser.id)), {
+          ...safeIbrahim,
+          nom_complet: 'براهيم ايت عدمان',
+          updatedAt: new Date().toISOString()
+        }, { merge: true });
+      } catch (_) {}
+    }
+
     // 3. Honorary Members
     const honoraryCol = collection(firestoreDb, 'honorary_members');
     const honorarySnap = await getDocs(honoraryCol);
@@ -141,31 +194,62 @@ export async function syncAndSeedFirestore(localDb) {
       localDb.honorary_members = remoteMembers;
     }
 
-    // 4. Articles
+    // 4. Articles (Ensure no stock images, keep authentic initiative content)
     const articlesCol = collection(firestoreDb, 'articles');
     const articleSnap = await getDocs(articlesCol);
     if (!articleSnap.empty) {
       const remoteArticles = [];
-      articleSnap.forEach(d => {
-        remoteArticles.push({ id: isNaN(d.id) ? d.id : Number(d.id), ...d.data() });
-      });
+      for (const d of articleSnap.docs) {
+        const data = d.data();
+        const item = { id: isNaN(d.id) ? d.id : Number(d.id), ...data, image_article: '' };
+        remoteArticles.push(item);
+        if (data.image_article) {
+          await setDoc(d.ref, { image_article: '' }, { merge: true });
+        }
+      }
       if (remoteArticles.length > 0) {
         localDb.articles = remoteArticles;
       }
-    }
-
-    // 5. Workshops
-    const workshopsCol = collection(firestoreDb, 'workshops');
-    const workshopSnap = await getDocs(workshopsCol);
-    if (!workshopSnap.empty) {
-      const remoteWorkshops = [];
-      workshopSnap.forEach(d => {
-        remoteWorkshops.push({ id: isNaN(d.id) ? d.id : Number(d.id), ...d.data() });
-      });
-      if (remoteWorkshops.length > 0) {
-        localDb.workshops = remoteWorkshops;
+    } else if (localDb.articles && localDb.articles.length > 0) {
+      for (const a of localDb.articles) {
+        await setDoc(doc(firestoreDb, 'articles', String(a.id)), a);
       }
     }
+
+    // 5. Workshops (Clean mock workshops, only keep admin-created ones if any)
+    const defaultWorkshopIds = ['ws-math-phys', 'ws-entrepreneurship', 'ws-eco-citizenship'];
+    const workshopsCol = collection(firestoreDb, 'workshops');
+    const workshopSnap = await getDocs(workshopsCol);
+    const remoteWorkshops = [];
+    if (!workshopSnap.empty) {
+      for (const d of workshopSnap.docs) {
+        if (defaultWorkshopIds.includes(d.id)) {
+          await deleteDoc(d.ref);
+          continue;
+        }
+        const data = d.data();
+        const item = { id: isNaN(d.id) ? d.id : Number(d.id), ...data, image: '' };
+        remoteWorkshops.push(item);
+        if (data.image) {
+          await setDoc(d.ref, { image: '' }, { merge: true });
+        }
+      }
+    }
+    localDb.workshops = remoteWorkshops;
+
+    // 6. Gallery: clean all images
+    try {
+      const galleryCol = collection(firestoreDb, 'gallery');
+      const gallerySnap = await getDocs(galleryCol);
+      if (!gallerySnap.empty) {
+        for (const d of gallerySnap.docs) {
+          await deleteDoc(d.ref);
+        }
+      }
+    } catch (e) {
+      console.warn('[Firestore] Gallery clean notice:', e.message);
+    }
+    localDb.gallery = [];
 
     console.log('[Firestore] Live database synchronization complete.');
   } catch (err) {
@@ -206,6 +290,15 @@ export async function persistUser(user) {
     }, { merge: true });
   } catch (err) {
     handleFirestoreError(err, OperationType.WRITE, `users/${user.id}`);
+  }
+}
+
+export async function removeUser(userId) {
+  if (!firestoreDb) return;
+  try {
+    await deleteDoc(doc(firestoreDb, 'users', String(userId)));
+  } catch (err) {
+    handleFirestoreError(err, OperationType.DELETE, `users/${userId}`);
   }
 }
 

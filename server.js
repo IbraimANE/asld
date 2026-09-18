@@ -14,6 +14,7 @@ import {
   persistProject, 
   removeProject, 
   persistUser, 
+  removeUser,
   persistProposal, 
   persistContactMessage, 
   persistHonoraryMember, 
@@ -23,6 +24,7 @@ import {
   persistWorkshop,
   removeWorkshop
 } from './firestore-db.js';
+import { handleAssociationChat } from './gemini-chat.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -94,12 +96,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Upload configuration
 const upload = multer({ storage: multer.memoryStorage() });
 
-// Global template variables middleware (Supports ar, fr, en)
+// Global template variables middleware (Supports ar, fr, en, he, ru, zh)
 app.use((req, res, next) => {
-  if (req.query.lang && ['ar', 'fr', 'en'].includes(req.query.lang)) {
-    req.session.lang = req.query.lang;
+  const validLangs = ['ar', 'fr', 'en', 'he', 'ru', 'zh'];
+  if (req.query.lang && validLangs.includes(req.query.lang)) {
+    if (req.session) req.session.lang = req.query.lang;
   }
-  const currentLang = req.session.lang || 'ar';
+  const currentLang = (req.query.lang && validLangs.includes(req.query.lang))
+    ? req.query.lang
+    : ((req.session && req.session.lang) || 'ar');
   res.locals.currentLang = currentLang;
   res.locals.lang = languages[currentLang] || languages.ar;
   res.locals.currentPath = req.path;
@@ -133,8 +138,32 @@ app.get(['/', '/index.php'], (req, res) => {
     workshops: db.workshops,
     proposals: db.proposals,
     gallery: db.gallery,
-    partners: db.partners
+    partners: db.partners,
+    impact_stats: db.impact_stats || {}
   });
+});
+
+// Dedicated AI Assistant Page
+app.get(['/assistant', '/assistant.php', '/chatbot', '/chatbot.php'], (req, res) => {
+  res.render('assistant');
+});
+
+// Server-Side Gemini Chatbot API Route
+app.post('/api/chat', async (req, res) => {
+  try {
+    const { messages, model } = req.body;
+    if (!messages || !Array.isArray(messages)) {
+      return res.status(400).json({ error: 'Invalid messages array payload' });
+    }
+    const response = await handleAssociationChat(messages, model);
+    res.json(response);
+  } catch (err) {
+    console.error('[API/CHAT] Error generating response:', err);
+    res.status(500).json({
+      error: 'Failed to process chat message',
+      reply: 'مرحباً بك! يمكنك التواصل مع مكتب الجمعية عبر صفحة اتصل بنا أو عبر الهاتف والبريد الإلكتروني.'
+    });
+  }
 });
 
 // Workshop Quick Registration
@@ -406,7 +435,7 @@ app.post(['/login', '/login.php'], (req, res) => {
       adminUser = {
         id: 2,
         membership_id: 'ASLD-2025-002',
-        nom_complet: 'إبراهيم أيت الديمان (مدير ومسؤول المنصة)',
+        nom_complet: 'براهيم ايت عدمان',
         email: 'ibrahimaitaddimane@gmail.com',
         telephone: '0662334455',
         password: bcrypt.hashSync('azerttyuiop123456789@', 10),
@@ -505,7 +534,7 @@ app.post('/api/auth/firebase-login', (req, res) => {
     adminUser = {
       id: 2,
       membership_id: 'ASLD-2025-002',
-      nom_complet: 'إبراهيم أيت الديمان (مدير ومسؤول المنصة)',
+      nom_complet: 'براهيم ايت عدمان',
       email: 'ibrahimaitaddimane@gmail.com',
       role: 'admin',
       status: 'تم القبول'
@@ -723,7 +752,7 @@ app.post(['/espace_membre/workshop', '/espace_membre/activite'], (req, res) => {
     seats_total: parseInt(seats_total, 10) || 30,
     seats_taken: 0,
     description: description || '',
-    image: image_url || 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=700&auto=format&fit=crop&q=80',
+    image: image_url || '',
     author_id: user.id,
     author_name: user.nom_complet,
     status: user.role === 'admin' ? 'publie' : 'en_attente',
@@ -796,8 +825,21 @@ app.get(['/admin', '/admin.php'], requireAdmin, (req, res) => {
     proposals: db.proposals,
     donations: db.donations,
     email_logs: db.email_logs || [],
-    honorary_members: db.honorary_members || []
+    honorary_members: db.honorary_members || [],
+    impact_stats: db.impact_stats || {}
   });
+});
+
+// Admin Impact Stats Management: Update Real Numbers
+app.post('/admin/impact-stats', requireAdmin, (req, res) => {
+  const { beneficiaries, volunteer_hours, trees_planted, workshops_count } = req.body;
+  db.impact_stats = {
+    beneficiaries: (beneficiaries || '').trim(),
+    volunteer_hours: (volunteer_hours || '').trim(),
+    trees_planted: (trees_planted || '').trim(),
+    workshops_count: (workshops_count || '').trim()
+  };
+  res.redirect('/admin.php?success=impact_updated');
 });
 
 // Admin Projects Management: Add Project
@@ -903,7 +945,7 @@ app.post('/admin/workshops/add', requireAdmin, (req, res) => {
       seats_total: parseInt(seats_total, 10) || 30,
       seats_taken: 0,
       description: description || '',
-      image: image || 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=700&auto=format&fit=crop&q=80',
+      image: image || '',
       status: 'publie',
       created_at: new Date().toISOString().substring(0, 10)
     };
@@ -976,6 +1018,31 @@ app.get(['/valider_membre.php', '/admin/member-action'], requireAdmin, (req, res
     persistUser(targetUser).catch(e => console.warn('[Firestore] Member update notice:', e.message));
   }
 
+  res.redirect('/admin.php');
+});
+
+// Admin Member Management: Delete Member (Supports GET & POST)
+app.all(['/admin/members/delete/:id', '/admin/members/:id/delete'], requireAdmin, (req, res) => {
+  const targetId = req.params.id;
+  const numId = Number(targetId);
+  const idx = (db.users || []).findIndex(u => 
+    u.id === targetId || 
+    String(u.id) === String(targetId) || 
+    (!isNaN(numId) && Number(u.id) === numId)
+  );
+
+  if (idx !== -1) {
+    const targetUser = db.users[idx];
+    // Safeguard: Never delete the master administrator account
+    if (targetUser.email && targetUser.email.trim().toLowerCase() === 'ibrahimaitaddimane@gmail.com') {
+      console.warn('[Admin] Attempt to delete master admin blocked.');
+      return res.redirect('/admin.php?error=cannot_delete_admin');
+    }
+    db.users.splice(idx, 1);
+    const userId = targetUser.id || targetId;
+    removeUser(userId).catch(e => console.warn('[Firestore] User delete notice:', e.message));
+    console.log(`[Admin] Deleted member: ${userId} (${targetUser.nom_complet})`);
+  }
   res.redirect('/admin.php');
 });
 

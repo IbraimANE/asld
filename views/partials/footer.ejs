@@ -1,20 +1,30 @@
-    <footer class="bg-white dark:bg-gray-950 py-16 border-t border-gray-200 dark:border-gray-800 mt-20 transition-colors">
-        <div class="container mx-auto px-6">
+    <!-- Official Footer with Logo Palette -->
+    <footer class="bg-gradient-to-b from-white via-slate-50 to-blue-50/40 dark:from-gray-950 dark:via-gray-900 dark:to-blue-950/40 py-16 border-t-2 border-amber-400/40 mt-20 transition-colors relative overflow-hidden">
+        <!-- Subtle background glow -->
+        <div class="absolute -top-32 right-1/4 w-96 h-96 bg-amber-400/5 dark:bg-amber-400/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-32 left-1/4 w-96 h-96 bg-blue-600/5 dark:bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="container mx-auto px-6 relative z-10">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
                 
                 <!-- Col 1: Identity -->
                 <div class="md:col-span-2 space-y-4">
-                    <div class="flex items-center gap-3">
-                        <img src="/image/logo_assoc.jpg" alt="Logo" class="h-14 w-14 object-contain rounded-2xl bg-white p-1 border border-gray-100 shadow-sm">
+                    <div class="flex items-center gap-3.5">
+                        <div class="relative p-0.5 rounded-2xl bg-gradient-to-br from-amber-400 to-blue-600 shadow-md">
+                            <img src="/image/logo_assoc.jpg" alt="Logo" class="h-14 w-14 object-contain rounded-[14px] bg-white p-1">
+                        </div>
                         <div>
                             <h3 class="text-xl font-black text-blue-950 dark:text-white"><%= lang.footer_title %></h3>
-                            <p class="text-xs font-bold text-emerald-600 dark:text-emerald-400"><%= lang.hero_motto %></p>
+                            <p class="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                                <span><%= lang.hero_motto %></span>
+                            </p>
                         </div>
                     </div>
-                    <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed max-w-md">
+                    <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed max-w-md font-medium">
                         <%= lang.hero_description %>
                     </p>
-                    <p class="text-xs text-gray-400 flex items-center gap-2">
+                    <p class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2 font-bold">
                         <span>📍</span>
                         <span><%= lang.footer_location %></span>
                     </p>
@@ -22,38 +32,40 @@
 
                 <!-- Col 2: Quick Links -->
                 <div>
-                    <h4 class="text-sm font-black text-blue-900 dark:text-yellow-400 uppercase tracking-wider mb-4"><%= currentLang === 'en' ? 'Quick Navigation' : (currentLang === 'fr' ? 'Navigation' : 'روابط سريعة') %></h4>
+                    <h4 class="text-sm font-black text-blue-950 dark:text-yellow-400 uppercase tracking-wider mb-4 pb-2 border-b-2 border-amber-400/40 inline-block"><%= lang.quick_nav %></h4>
                     <ul class="space-y-2.5 text-sm font-bold text-gray-600 dark:text-gray-400">
-                        <li><a href="/index.php#workshops" class="hover:text-blue-600 dark:hover:text-white transition-colors">← <%= lang.nav_workshops %></a></li>
-                        <li><a href="/index.php#proposals" class="hover:text-blue-600 dark:hover:text-white transition-colors">← <%= lang.proposals_title %></a></li>
-                        <li><a href="/index.php#gallery" class="hover:text-blue-600 dark:hover:text-white transition-colors">← <%= lang.nav_gallery %></a></li>
-                        <li><a href="/index.php#donate" class="hover:text-blue-600 dark:hover:text-white transition-colors">← <%= lang.nav_donate %></a></li>
-                        <li><a href="/membres.php" class="hover:text-blue-600 dark:hover:text-white transition-colors">← <%= lang.nav_members %></a></li>
+                        <li><a href="/index.php#workshops" class="hover:text-amber-600 dark:hover:text-yellow-300 transition-colors flex items-center gap-1.5"><span class="text-amber-500">←</span> <%= lang.nav_workshops %></a></li>
+                        <li><a href="/index.php#proposals" class="hover:text-amber-600 dark:hover:text-yellow-300 transition-colors flex items-center gap-1.5"><span class="text-amber-500">←</span> <%= lang.proposals_title %></a></li>
+                        <li><a href="/index.php#gallery" class="hover:text-amber-600 dark:hover:text-yellow-300 transition-colors flex items-center gap-1.5"><span class="text-amber-500">←</span> <%= lang.nav_gallery %></a></li>
+                        <li><a href="/index.php#donate" class="hover:text-amber-600 dark:hover:text-yellow-300 transition-colors flex items-center gap-1.5"><span class="text-emerald-500">❤️</span> <%= lang.nav_donate %></a></li>
+                        <li><a href="/membres.php" class="hover:text-amber-600 dark:hover:text-yellow-300 transition-colors flex items-center gap-1.5"><span class="text-amber-500">←</span> <%= lang.nav_members %></a></li>
+                        <li><a href="/assistant.php" class="text-amber-600 dark:text-amber-400 font-black hover:underline transition-colors flex items-center gap-1.5"><span>🤖</span> <span>المساعد الذكي (Gemini)</span></a></li>
                     </ul>
                 </div>
 
                 <!-- Col 3: Social Share & Contact -->
                 <div>
-                    <h4 class="text-sm font-black text-blue-900 dark:text-yellow-400 uppercase tracking-wider mb-4"><%= currentLang === 'en' ? 'Share & Connect' : (currentLang === 'fr' ? 'Partager & Suivre' : 'مشاركة وتواصل') %></h4>
+                    <h4 class="text-sm font-black text-blue-950 dark:text-yellow-400 uppercase tracking-wider mb-4 pb-2 border-b-2 border-amber-400/40 inline-block"><%= lang.share_connect %></h4>
                     <p class="text-xs text-gray-500 dark:text-gray-400 mb-4">
-                        <%= currentLang === 'en' ? 'Share our initiatives on social media:' : (currentLang === 'fr' ? 'Partagez nos actions sur vos réseaux :' : 'شارك أنشطة الجمعية عبر منصات التواصل:') %>
+                        <%= lang.share_desc %>
                     </p>
-                    <div class="flex gap-2.5">
+                    <div class="flex flex-wrap gap-2.5 items-center">
+                        <!-- Official Association Facebook Page -->
+                        <a href="https://www.facebook.com/people/%D8%AC%D9%85%D8%B9%D9%8A%D8%A9-%D9%85%D8%A8%D8%A7%D8%AF%D8%B1%D8%A7%D8%AA-%D8%A8%D9%84%D8%A7-%D8%AD%D8%AF%D9%88%D8%AF/100079327284833/" target="_blank" rel="noopener noreferrer" class="h-10 px-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 text-xs font-black shadow-md hover:scale-105 transition" title="الصفحة الرسمية على فيسبوك">
+                            <span class="font-black text-sm">f</span>
+                            <span>صفحتنا على فيسبوك</span>
+                        </a>
                         <!-- WhatsApp Share -->
-                        <a href="https://api.whatsapp.com/send?text=تعرف%20على%20أنشطة%20جمعية%20مبادرات%20بلا%20حدود:%20https://ais-dev-tlwtvdscjblntwsbjnrz7s-186216381656.europe-west2.run.app" target="_blank" rel="noopener" class="w-10 h-10 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center text-lg shadow-md hover:scale-105 transition" title="WhatsApp">
+                        <a href="https://api.whatsapp.com/send?text=تعرف%20على%20أنشطة%20جمعية%20مبادرات%20بلا%20حدود%20بالدروة" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center text-lg shadow-md hover:scale-110 transition" title="WhatsApp">
                             💬
                         </a>
-                        <!-- Facebook Share -->
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=https://ais-dev-tlwtvdscjblntwsbjnrz7s-186216381656.europe-west2.run.app" target="_blank" rel="noopener" class="w-10 h-10 rounded-xl bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center text-lg shadow-md hover:scale-105 transition" title="Facebook">
-                            f
-                        </a>
                         <!-- Contact direct -->
-                        <a href="/contact.php" class="w-10 h-10 rounded-xl bg-gray-800 hover:bg-gray-900 text-white flex items-center justify-center text-lg shadow-md hover:scale-105 transition" title="Email / Message">
+                        <a href="/contact.php" class="w-10 h-10 rounded-xl bg-blue-950 hover:bg-blue-900 text-yellow-300 flex items-center justify-center text-lg shadow-md hover:scale-110 transition" title="Email / Message">
                             ✉️
                         </a>
                     </div>
                     <div class="mt-6">
-                        <a href="/inscription.php" class="inline-block bg-gradient-to-r from-yellow-400 to-amber-500 text-blue-950 text-xs font-black px-4 py-2.5 rounded-xl shadow hover:shadow-lg transition">
+                        <a href="/inscription.php" class="btn-solid-gold inline-flex px-5 py-2.5 rounded-xl text-xs font-black">
                             <%= lang.join_us %> (100 MAD)
                         </a>
                     </div>
@@ -61,9 +73,15 @@
 
             </div>
 
-            <div class="border-t border-gray-100 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs font-bold text-gray-400 dark:text-gray-500 gap-4">
+            <div class="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs font-bold text-gray-500 dark:text-gray-400 gap-4">
                 <p>&copy; <%= new Date().getFullYear() %> <%= lang.footer_title %> | Association Initiatives Sans Frontières</p>
-                <p>Deroua - Berrechid - Casablanca-Settat</p>
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span>Deroua - Berrechid - Casablanca-Settat 🇲🇦</span>
+                </div>
             </div>
         </div>
     </footer>
+
+    <!-- Interactive AI Chatbot Widget -->
+    <%- include('chatbot_widget') %>

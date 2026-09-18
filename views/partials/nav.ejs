@@ -1,81 +1,100 @@
+    <!-- Official Brand Accent Line -->
+    <div class="brand-accent-line w-full"></div>
+
     <!-- Urgent Top Announcement Bar (Shown only if announcement is filled) -->
     <% if (lang.urgent_announcement && lang.urgent_announcement.trim() !== '') { %>
-    <div id="urgent-bar" class="bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-blue-950 px-4 py-2 text-xs md:text-sm font-black shadow-md flex justify-between items-center transition-all duration-300">
+    <div id="urgent-bar" class="bg-amber-500 text-slate-950 px-4 py-2 text-xs md:text-sm font-black shadow-sm flex justify-between items-center transition-all duration-300 border-b border-amber-600/30">
         <div class="container mx-auto flex items-center justify-between gap-4">
             <div class="flex items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
+                <span class="inline-block animate-pulse">📢</span>
                 <span><%= lang.urgent_announcement %></span>
             </div>
             <div class="flex items-center gap-3 flex-shrink-0">
-                <a href="/index.php#workshops" class="bg-blue-950 text-white px-3 py-1 rounded-lg text-xs hover:bg-blue-900 transition">
+                <a href="/index.php#workshops" class="bg-slate-900 hover:bg-slate-800 text-amber-300 font-black px-3.5 py-1 rounded-lg text-xs shadow transition">
                     <%= lang.nav_workshops %>
                 </a>
-                <button type="button" onclick="document.getElementById('urgent-bar').style.display='none'" class="text-blue-950/70 hover:text-blue-950 font-bold px-1.5 py-0.5" title="Close">✕</button>
+                <button type="button" onclick="document.getElementById('urgent-bar').style.display='none'" class="text-slate-950/70 hover:text-slate-950 font-black px-1.5 py-0.5" title="Close">✕</button>
             </div>
         </div>
     </div>
     <% } %>
 
     <!-- Main Navigation -->
-    <nav class="glass-nav sticky top-0 z-50 py-3 flex items-center transition-all duration-300 border-b border-gray-200/40 dark:border-gray-800 dark:bg-gray-900/90">
+    <nav class="glass-nav sticky top-0 z-50 py-3.5 flex items-center transition-all duration-300">
         <div class="container mx-auto px-4 md:px-6 flex justify-between items-center">
             
             <!-- Logo & Title -->
-            <div class="flex items-center gap-4">
-                <a href="/index.php" class="flex items-center gap-3 transition-transform hover:scale-105">
-                    <img src="/image/logo_assoc.jpg" alt="Association Initiatives Sans Frontières - مبادرات بلا حدود" class="h-14 md:h-16 w-14 md:w-16 object-contain rounded-2xl bg-white p-1 shadow-md border border-gray-100">
-                    <div class="hidden sm:block">
-                        <span class="block font-black text-blue-950 dark:text-white text-base md:text-lg leading-tight">
-                            <%= currentLang === 'en' ? 'Boundless Initiatives' : (currentLang === 'fr' ? 'Initiatives Sans Frontières' : 'مبادرات بلا حدود') %>
+            <div class="flex items-center gap-3">
+                <a href="/index.php" class="flex items-center gap-3 group">
+                    <div class="relative p-1 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm group-hover:shadow transition duration-200">
+                        <img src="/image/logo_assoc.jpg" alt="Association Initiatives Sans Frontières - مبادرات بلا حدود" class="h-11 md:h-13 w-11 md:w-13 object-contain rounded-lg">
+                    </div>
+                    <div class="hidden sm:block text-right">
+                        <span class="block font-black text-[#0e244d] dark:text-white text-base md:text-lg leading-tight tracking-tight group-hover:text-blue-700 dark:group-hover:text-amber-400 transition-colors">
+                            <%= lang.hero_title_2 %>
                         </span>
-                        <span class="block text-[11px] font-bold text-emerald-600 dark:text-emerald-400"><%= lang.hero_motto %></span>
+                        <div class="flex items-center gap-1.5 mt-0.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                            <span class="block text-[11px] font-bold text-slate-500 dark:text-slate-400"><%= lang.hero_motto %></span>
+                        </div>
                     </div>
                 </a>
             </div>
 
             <!-- Desktop Nav Links -->
             <div class="hidden xl:flex items-center gap-1 font-bold text-sm">
-                <a href="/index.php" class="<%= currentPath === '/' || currentPath === '/index.php' ? 'text-blue-900 dark:text-yellow-400 font-black' : 'text-gray-600 dark:text-gray-300' %> px-3 py-2 hover:text-blue-600 dark:hover:text-yellow-300 transition-colors"><%= lang.nav_home %></a>
-                <a href="/index.php#workshops" class="text-gray-600 dark:text-gray-300 px-3 py-2 hover:text-blue-600 dark:hover:text-yellow-300 transition-colors"><%= lang.nav_workshops %></a>
-                <a href="/index.php#proposals" class="text-gray-600 dark:text-gray-300 px-3 py-2 hover:text-blue-600 dark:hover:text-yellow-300 transition-colors"><%= lang.proposals_title.split(' ')[0] + ' ' + (lang.proposals_title.split(' ')[1] || '') %></a>
-                <a href="/index.php#gallery" class="text-gray-600 dark:text-gray-300 px-3 py-2 hover:text-blue-600 dark:hover:text-yellow-300 transition-colors"><%= lang.nav_gallery %></a>
-                <a href="/index.php#donate" class="text-emerald-700 dark:text-emerald-400 px-3 py-2 hover:text-emerald-800 transition-colors font-black"><%= lang.nav_donate %></a>
-                <a href="/membres.php" class="<%= currentPath.includes('membres') ? 'text-blue-900 dark:text-yellow-400 font-black' : 'text-gray-600 dark:text-gray-300' %> px-3 py-2 hover:text-blue-600 transition-colors"><%= lang.nav_members %></a>
-                <a href="/contact.php" class="<%= currentPath.includes('contact') ? 'text-blue-900 dark:text-yellow-400 font-black' : 'text-gray-600 dark:text-gray-300' %> px-3 py-2 hover:text-blue-600 transition-colors"><%= lang.nav_contact %></a>
+                <a href="/index.php" class="<%= currentPath === '/' || currentPath === '/index.php' ? 'text-[#0e244d] dark:text-amber-400 font-black bg-slate-100 dark:bg-slate-800/80 rounded-lg' : 'text-slate-600 dark:text-slate-300' %> px-3 py-2 hover:text-[#0e244d] dark:hover:text-white transition-colors"><%= lang.nav_home %></a>
+                <a href="/index.php#workshops" class="text-slate-600 dark:text-slate-300 px-3 py-2 hover:text-[#0e244d] dark:hover:text-white transition-colors"><%= lang.nav_workshops %></a>
+                <a href="/index.php#proposals" class="text-slate-600 dark:text-slate-300 px-3 py-2 hover:text-[#0e244d] dark:hover:text-white transition-colors"><%= lang.proposals_title.split(' ')[0] + ' ' + (lang.proposals_title.split(' ')[1] || '') %></a>
+                <a href="/index.php#gallery" class="text-slate-600 dark:text-slate-300 px-3 py-2 hover:text-[#0e244d] dark:hover:text-white transition-colors"><%= lang.nav_gallery %></a>
+                <a href="/index.php#donate" class="text-emerald-700 dark:text-emerald-400 px-3 py-2 hover:text-emerald-800 transition-colors font-black flex items-center gap-1"><span>❤️</span> <%= lang.nav_donate %></a>
+                <a href="/membres.php" class="<%= currentPath.includes('membres') ? 'text-[#0e244d] dark:text-amber-400 font-black bg-slate-100 dark:bg-slate-800/80 rounded-lg' : 'text-slate-600 dark:text-slate-300' %> px-3 py-2 hover:text-[#0e244d] dark:hover:text-white transition-colors"><%= lang.nav_members %></a>
+                <a href="/contact.php" class="<%= currentPath.includes('contact') ? 'text-[#0e244d] dark:text-amber-400 font-black bg-slate-100 dark:bg-slate-800/80 rounded-lg' : 'text-slate-600 dark:text-slate-300' %> px-3 py-2 hover:text-[#0e244d] dark:hover:text-white transition-colors"><%= lang.nav_contact %></a>
+                <a href="/assistant.php" class="<%= currentPath.includes('assistant') ? 'bg-amber-400 text-slate-950 font-black' : 'bg-slate-100 dark:bg-slate-800 text-[#0e244d] dark:text-amber-300 hover:bg-amber-100' %> px-2.5 py-1.5 rounded-xl transition-all font-black text-xs flex items-center gap-1.5 border border-amber-300/40 shadow-xs" title="المساعد الذكي للجمعية">
+                    <span>🤖</span>
+                    <span>المساعد الذكي</span>
+                </a>
             </div>
 
             <!-- Controls: Lang, Dark Mode, Auth -->
-            <div class="flex items-center gap-2 md:gap-3">
+            <div class="flex items-center gap-1.5 md:gap-3">
                 
                 <!-- Dark Mode Toggle Button -->
-                <button type="button" id="dark-mode-toggle" class="p-2 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-yellow-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition" title="<%= lang.dark_mode %>" aria-label="Toggle Dark Mode">
+                <button type="button" id="dark-mode-toggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-amber-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition" title="<%= lang.dark_mode %>" aria-label="Toggle Dark Mode">
                     <span id="dark-icon" class="text-base">🌙</span>
                 </button>
 
-                <!-- 3-Language Selector -->
-                <div class="flex gap-1.5 bg-white/90 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-2.5 py-1 rounded-xl font-bold text-xs shadow-sm">
-                    <a href="?lang=ar" class="<%= currentLang === 'ar' ? 'text-blue-900 dark:text-yellow-400 font-black underline' : 'text-gray-400 hover:text-blue-900 dark:hover:text-white' %>">عربي</a>
-                    <span class="text-gray-300 dark:text-gray-600">|</span>
-                    <a href="?lang=fr" class="<%= currentLang === 'fr' ? 'text-blue-900 dark:text-yellow-400 font-black underline' : 'text-gray-400 hover:text-blue-900 dark:hover:text-white' %>">FR</a>
-                    <span class="text-gray-300 dark:text-gray-600">|</span>
-                    <a href="?lang=en" class="<%= currentLang === 'en' ? 'text-blue-900 dark:text-yellow-400 font-black underline' : 'text-gray-400 hover:text-blue-900 dark:hover:text-white' %>">EN</a>
+                <!-- 6-Language Selector -->
+                <div class="flex items-center gap-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2 py-1.5 rounded-xl font-bold text-[11px] md:text-xs">
+                    <a href="?lang=ar" class="<%= currentLang === 'ar' ? 'text-[#0e244d] dark:text-amber-400 font-black underline' : 'text-slate-400 hover:text-slate-800 dark:hover:text-white' %>" title="العربية">عربي</a>
+                    <span class="text-slate-300 dark:text-slate-600">|</span>
+                    <a href="?lang=fr" class="<%= currentLang === 'fr' ? 'text-[#0e244d] dark:text-amber-400 font-black underline' : 'text-slate-400 hover:text-slate-800 dark:hover:text-white' %>" title="Français">FR</a>
+                    <span class="text-slate-300 dark:text-slate-600">|</span>
+                    <a href="?lang=en" class="<%= currentLang === 'en' ? 'text-[#0e244d] dark:text-amber-400 font-black underline' : 'text-slate-400 hover:text-slate-800 dark:hover:text-white' %>" title="English">EN</a>
+                    <span class="text-slate-300 dark:text-slate-600">|</span>
+                    <a href="?lang=he" class="<%= currentLang === 'he' ? 'text-[#0e244d] dark:text-amber-400 font-black underline' : 'text-slate-400 hover:text-slate-800 dark:hover:text-white' %>" title="עברית">עב</a>
+                    <span class="text-slate-300 dark:text-slate-600">|</span>
+                    <a href="?lang=ru" class="<%= currentLang === 'ru' ? 'text-[#0e244d] dark:text-amber-400 font-black underline' : 'text-slate-400 hover:text-slate-800 dark:hover:text-white' %>" title="Русский">RU</a>
+                    <span class="text-slate-300 dark:text-slate-600">|</span>
+                    <a href="?lang=zh" class="<%= currentLang === 'zh' ? 'text-[#0e244d] dark:text-amber-400 font-black underline' : 'text-slate-400 hover:text-slate-800 dark:hover:text-white' %>" title="中文">中文</a>
                 </div>
 
                 <!-- Auth / Profile Buttons -->
                 <% if (user) { %>
                     <% if (user.role === 'admin' || user.role === 'responsable') { %>
-                        <a href="/admin.php" class="bg-gradient-to-r from-purple-600 to-indigo-700 text-white px-3.5 py-2 rounded-xl font-black shadow-md hover:shadow-indigo-500/30 hover:-translate-y-0.5 transition-all text-xs flex items-center gap-1">
+                        <a href="/admin.php" class="bg-[#0e244d] hover:bg-slate-800 text-amber-300 px-3.5 py-2 rounded-xl font-black shadow-sm transition text-xs flex items-center gap-1">
                             ⚙️ <span class="hidden md:inline"><%= lang.admin_panel %></span>
                         </a>
                     <% } %>
-                    <a href="/espace_membre.php" class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white px-3.5 py-2 rounded-xl font-black shadow-md hover:shadow-indigo-500/30 hover:-translate-y-0.5 transition-all text-xs">
+                    <a href="/espace_membre.php" class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-[#0e244d] dark:text-white px-3.5 py-2 rounded-xl font-black text-xs transition">
                         <%= lang.dashboard %>
                     </a>
                     <a href="/logout.php" class="bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 px-3 py-2 rounded-xl font-bold hover:bg-red-100 dark:hover:bg-red-900/60 transition-colors text-xs">
                         <%= lang.logout %>
                     </a>
                 <% } else { %>
-                    <a href="/login.php" class="text-blue-900 dark:text-white font-bold px-3 py-1.5 hover:text-blue-600 transition-colors text-xs"><%= lang.login %></a>
-                    <a href="/inscription.php" class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-950 px-3.5 py-2 rounded-xl font-black shadow-md hover:shadow-yellow-500/30 hover:-translate-y-0.5 transition-all text-xs whitespace-nowrap"><%= lang.join_us %></a>
+                    <a href="/login.php" class="text-slate-700 dark:text-slate-200 font-bold px-3 py-2 hover:text-[#0e244d] dark:hover:text-amber-400 transition-colors text-xs"><%= lang.login %></a>
+                    <a href="/inscription.php" class="bg-amber-500 hover:bg-amber-600 text-slate-950 px-4 py-2 rounded-xl font-black text-xs shadow-sm transition whitespace-nowrap"><%= lang.join_us %></a>
                 <% } %>
             </div>
         </div>

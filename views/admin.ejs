@@ -91,7 +91,7 @@
                 <div>
                     <div class="flex flex-wrap items-center gap-2.5">
                         <h2 class="text-xl md:text-2xl font-black">
-                            <%= locals.currentUser ? currentUser.nom_complet : 'إبراهيم أيت الديمان' %>
+                            <%= locals.currentUser ? currentUser.nom_complet : 'براهيم ايت عدمان' %>
                         </h2>
                         <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 text-[11px] font-black px-3 py-0.5 rounded-full flex items-center gap-1.5">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
@@ -274,6 +274,70 @@
 
         </div>
 
+        <!-- Real Impact Metrics Configuration Bar (أثرنا المجتمعي في أرقام) -->
+        <div class="bg-white dark:bg-gray-900 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 mb-8">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 pb-3 border-b border-gray-100 dark:border-gray-800">
+                <div class="flex items-center gap-3">
+                    <span class="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 flex items-center justify-center text-lg">📈</span>
+                    <div>
+                        <h3 class="text-base font-black text-blue-950 dark:text-white">أثرنا المجتمعي في أرقام (الواجهة الرئيسية)</h3>
+                        <p class="text-xs text-gray-400">هذه الأرقام حقيقية ومتروكة فارغة حالياً لحين احتساب وإدخال الإحصائيات الفعلية</p>
+                    </div>
+                </div>
+                <button type="button" onclick="document.getElementById('impact-stats-form').classList.toggle('hidden')" class="bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 text-gray-700 dark:text-gray-300 text-xs font-bold px-4 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer">
+                    ⚙️ <span>تعديل الأرقام الحقيقية</span>
+                </button>
+            </div>
+
+            <!-- Preview of Current Real Numbers (Empty by default) -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+                <div class="p-3 bg-blue-50/50 dark:bg-gray-800/50 rounded-2xl border border-blue-100 dark:border-gray-700">
+                    <p class="text-[11px] font-bold text-gray-500">مستفيد ومستفيدة</p>
+                    <p class="text-xl font-black text-blue-900 dark:text-yellow-400 mt-1"><%= (locals.impact_stats && locals.impact_stats.beneficiaries) ? locals.impact_stats.beneficiaries : '— (فارغ)' %></p>
+                </div>
+                <div class="p-3 bg-emerald-50/50 dark:bg-gray-800/50 rounded-2xl border border-emerald-100 dark:border-gray-700">
+                    <p class="text-[11px] font-bold text-gray-500">ساعة عمل تطوعي</p>
+                    <p class="text-xl font-black text-emerald-600 dark:text-emerald-400 mt-1"><%= (locals.impact_stats && locals.impact_stats.volunteer_hours) ? locals.impact_stats.volunteer_hours : '— (فارغ)' %></p>
+                </div>
+                <div class="p-3 bg-amber-50/50 dark:bg-gray-800/50 rounded-2xl border border-amber-100 dark:border-gray-700">
+                    <p class="text-[11px] font-bold text-gray-500">شجرة مغروسة</p>
+                    <p class="text-xl font-black text-amber-600 dark:text-amber-400 mt-1"><%= (locals.impact_stats && locals.impact_stats.trees_planted) ? locals.impact_stats.trees_planted : '— (فارغ)' %></p>
+                </div>
+                <div class="p-3 bg-indigo-50/50 dark:bg-gray-800/50 rounded-2xl border border-indigo-100 dark:border-gray-700">
+                    <p class="text-[11px] font-bold text-gray-500">دورة وورشة تكوينية</p>
+                    <p class="text-xl font-black text-indigo-600 dark:text-indigo-400 mt-1"><%= (locals.impact_stats && locals.impact_stats.workshops_count) ? locals.impact_stats.workshops_count : '— (فارغ)' %></p>
+                </div>
+            </div>
+
+            <!-- Form To Update (Hidden by default) -->
+            <form id="impact-stats-form" action="/admin/impact-stats" method="POST" class="hidden mt-6 pt-6 border-t border-gray-100 dark:border-gray-800 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">عدد المستفيدين والمستفيدات:</label>
+                    <input type="text" name="beneficiaries" value="<%= locals.impact_stats ? locals.impact_stats.beneficiaries : '' %>" placeholder="مثال: +1,850 أو اترك فارغاً" class="w-full bg-slate-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-2.5 rounded-xl text-xs font-bold outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">ساعات العمل التطوعي:</label>
+                    <input type="text" name="volunteer_hours" value="<%= locals.impact_stats ? locals.impact_stats.volunteer_hours : '' %>" placeholder="مثال: +620 أو اترك فارغاً" class="w-full bg-slate-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-2.5 rounded-xl text-xs font-bold outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">عدد الأشجار المغروسة:</label>
+                    <input type="text" name="trees_planted" value="<%= locals.impact_stats ? locals.impact_stats.trees_planted : '' %>" placeholder="مثال: +450 أو اترك فارغاً" class="w-full bg-slate-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-2.5 rounded-xl text-xs font-bold outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 mb-1">الدورات والورشات التكوينية:</label>
+                    <input type="text" name="workshops_count" value="<%= locals.impact_stats ? locals.impact_stats.workshops_count : '' %>" placeholder="مثال: +24 أو اترك فارغاً" class="w-full bg-slate-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-2.5 rounded-xl text-xs font-bold outline-none">
+                </div>
+                <div class="sm:col-span-2 lg:col-span-4 flex justify-end gap-3 pt-2">
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black px-6 py-2.5 rounded-xl transition shadow cursor-pointer">
+                        حفظ الأرقام الفعلية
+                    </button>
+                    <button type="button" onclick="document.getElementById('impact-stats-form').classList.add('hidden')" class="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer">
+                        إلغاء
+                    </button>
+                </div>
+            </form>
+        </div>
+
         <!-- Navigation Tabs for Admin Sections -->
         <div class="flex flex-wrap gap-2 border-b border-gray-200 dark:border-gray-800 mb-8 pb-3">
             <button type="button" onclick="switchAdminTab('tab-members')" id="btn-tab-members" class="admin-tab-btn active bg-blue-950 text-white px-5 py-2.5 rounded-2xl text-xs font-black transition shadow">
@@ -404,6 +468,13 @@
                                             <a href="/valider_membre.php?id=<%= u.id %>&action=refuser" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1.5 rounded-xl font-bold transition text-xs">
                                                 رفض
                                             </a>
+                                        <% } %>
+                                        <% if (u.email !== 'ibrahimaitaddimane@gmail.com') { %>
+                                            <form action="/admin/members/delete/<%= u.id %>" method="POST" class="inline m-0">
+                                                <button type="submit" class="bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-100 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900/60 px-2.5 py-1.5 rounded-xl font-bold transition text-xs flex items-center gap-1 cursor-pointer" title="حذف هذا المنخرط">
+                                                    🗑️ <span class="hidden sm:inline">حذف</span>
+                                                </button>
+                                            </form>
                                         <% } %>
                                     </div>
                                 </td>
@@ -1042,7 +1113,7 @@
                     <div>
                         <label class="block text-[11px] font-black text-gray-600 dark:text-gray-300 mb-1">اختر منخرطاً للمعاينة:</label>
                         <select id="specimen-member-selector" onchange="onSpecimenSelectMember(this)" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-xs font-bold p-2.5 rounded-xl outline-none">
-                            <option value="default">⭐ نموذج افتراضي: إبراهيم أيت الديمان (رئيس الجمعية)</option>
+                            <option value="default">⭐ نموذج افتراضي: براهيم ايت عدمان (رئيس الجمعية)</option>
                             <% users.forEach(function(u) { %>
                                 <option value="<%= u.id %>" 
                                     data-name="<%= u.nom_complet %>"
@@ -1057,7 +1128,7 @@
                     </div>
                     <div>
                         <label class="block text-[11px] font-black text-gray-600 dark:text-gray-300 mb-1">الاسم الكامل الظاهر:</label>
-                        <input type="text" id="specimen-input-name" value="إبراهيم أيت الديمان" oninput="updateCardPreview()" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-xs font-bold p-2.5 rounded-xl outline-none">
+                        <input type="text" id="specimen-input-name" value="براهيم ايت عدمان" oninput="updateCardPreview()" class="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-xs font-bold p-2.5 rounded-xl outline-none">
                     </div>
                     <div>
                         <label class="block text-[11px] font-black text-gray-600 dark:text-gray-300 mb-1">رقم العضوية التسلسلي:</label>
@@ -1128,7 +1199,7 @@
                                 <div>
                                     <p class="text-[9px] text-amber-200/80 font-bold">الاسم الكامل / Nom Complet:</p>
                                     <h3 class="text-sm sm:text-base font-black text-white leading-tight truncate" id="specimen-display-name">
-                                        إبراهيم أيت الديمان
+                                        براهيم ايت عدمان
                                     </h3>
                                 </div>
                                 <div class="grid grid-cols-2 gap-2 pt-0.5">
@@ -1222,7 +1293,7 @@
                                 </div>
                                 <div class="text-left">
                                     <p class="text-[8px] text-amber-200 font-bold">توقيع رئيس الجمعية</p>
-                                    <p class="text-[9px] font-black text-white font-serif">إبراهيم أيت الديمان</p>
+                                    <p class="text-[9px] font-black text-white font-serif">براهيم ايت عدمان</p>
                                 </div>
                             </div>
                         </div>
@@ -1300,7 +1371,7 @@
 
         // Membership Card Specimen Functions
         function previewMemberCard(name, memId, quartier, cin, cotisation) {
-            document.getElementById('specimen-input-name').value = name || 'إبراهيم أيت الديمان';
+            document.getElementById('specimen-input-name').value = name || 'براهيم ايت عدمان';
             document.getElementById('specimen-input-id').value = memId || 'ASLD-2026-00101';
             document.getElementById('specimen-input-quartier').value = quartier || 'مدينة الدروة';
             updateCardPreview();
@@ -1321,7 +1392,7 @@
         }
 
         function updateCardPreview() {
-            const name = document.getElementById('specimen-input-name').value.trim() || 'إبراهيم أيت الديمان';
+            const name = document.getElementById('specimen-input-name').value.trim() || 'براهيم ايت عدمان';
             const memId = document.getElementById('specimen-input-id').value.trim() || 'ASLD-2026-00101';
             const quartier = document.getElementById('specimen-input-quartier').value.trim() || 'مدينة الدروة';
 
@@ -1337,7 +1408,7 @@
         }
 
         function resetCardSpecimen() {
-            document.getElementById('specimen-input-name').value = 'إبراهيم أيت الديمان';
+            document.getElementById('specimen-input-name').value = 'براهيم ايت عدمان';
             document.getElementById('specimen-input-id').value = 'ASLD-2026-00101';
             document.getElementById('specimen-input-quartier').value = 'حي الوفاء - الدروة';
             const selector = document.getElementById('specimen-member-selector');

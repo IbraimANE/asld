@@ -1,0 +1,337 @@
+<!-- AI Chatbot Floating Widget for Association Initiatives Sans Frontières -->
+<div id="asld-chatbot-root" class="fixed bottom-5 <%= lang.direction === 'rtl' ? 'left-5' : 'right-5' %> z-50 select-none font-sans" dir="<%= lang.direction %>">
+    
+    <!-- Floating Launcher Button -->
+    <button type="button" id="chatbot-toggle-btn" class="group relative flex items-center gap-2.5 bg-gradient-to-r from-[#0e244d] to-blue-900 text-amber-300 hover:text-white px-4 py-3 rounded-full shadow-2xl hover:shadow-amber-500/20 hover:scale-105 active:scale-95 transition-all duration-300 border-2 border-amber-400/40 focus:outline-none" aria-label="المساعد الذكي لجمعية مبادرات بلا حدود">
+        <span class="relative flex h-3.5 w-3.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500"></span>
+        </span>
+        <span class="text-xl">🤖</span>
+        <span class="font-black text-xs md:text-sm tracking-wide text-white">المساعد الذكي للجمعية</span>
+        <span class="hidden group-hover:inline-block text-[10px] bg-amber-400 text-slate-950 font-black px-1.5 py-0.5 rounded-full">Gemini</span>
+    </button>
+
+    <!-- Chatbot Window Pane (Hidden by default) -->
+    <div id="chatbot-window" class="hidden flex flex-col w-[360px] sm:w-[400px] max-w-[94vw] h-[540px] max-h-[82vh] bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden transition-all duration-300 animate-in fade-in zoom-in-95">
+        
+        <!-- Window Header -->
+        <div class="bg-gradient-to-r from-[#0e244d] via-blue-950 to-slate-900 text-white p-3.5 border-b border-amber-400/30 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <div class="relative w-9 h-9 rounded-xl bg-white p-0.5 flex items-center justify-center shadow">
+                    <img src="/image/logo_assoc.jpg" alt="ASLD" class="w-full h-full object-contain rounded-lg">
+                    <span class="absolute -bottom-1 -right-1 w-3 h-3 bg-emerald-500 border-2 border-[#0e244d] rounded-full"></span>
+                </div>
+                <div>
+                    <div class="flex items-center gap-1.5">
+                        <h3 class="font-black text-xs md:text-sm text-white">المساعد الذكي (ASLD)</h3>
+                        <span class="text-[9px] bg-amber-400/20 text-amber-300 font-bold px-1.5 py-0.5 rounded border border-amber-400/30">AI</span>
+                    </div>
+                    <p class="text-[10px] text-slate-300 font-medium flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span>متصل - رهن إشارتكم</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Controls: Model switch, Reset, Close -->
+            <div class="flex items-center gap-1.5">
+                <select id="chat-model-select" class="bg-slate-800/90 text-amber-300 text-[10px] font-bold py-1 px-2 rounded-lg border border-slate-700 focus:outline-none" title="نموذج الذكاء الاصطناعي">
+                    <option value="gemini-3.5-flash" selected>3.5 Flash (شامل)</option>
+                    <option value="gemini-3.1-flash-lite">3.1 Lite (سريع)</option>
+                    <option value="gemini-3.1-pro-preview">3.1 Pro (تحليلي)</option>
+                </select>
+                <button type="button" id="chat-reset-btn" class="p-1.5 rounded-lg text-slate-300 hover:text-amber-300 hover:bg-slate-800 transition" title="بدء محادثة جديدة" aria-label="Reset chat">
+                    🔄
+                </button>
+                <button type="button" id="chat-close-btn" class="p-1.5 rounded-lg text-slate-300 hover:text-red-400 hover:bg-slate-800 transition" title="إغلاق النافذة" aria-label="Close chat">
+                    ✕
+                </button>
+            </div>
+        </div>
+
+        <!-- System Role & Context Banner -->
+        <div class="bg-amber-50 dark:bg-slate-800/80 px-3 py-1.5 border-b border-amber-200/60 dark:border-slate-700 flex items-center justify-between text-[11px] text-[#0e244d] dark:text-amber-300 font-bold">
+            <span class="flex items-center gap-1">
+                <span>📍</span>
+                <span>جمعية مبادرات بلا حدود - الدروة</span>
+            </span>
+            <a href="/assistant.php" class="text-[10px] text-blue-600 dark:text-amber-400 hover:underline flex items-center gap-0.5">
+                <span>عرض كامل</span>
+                <span>↗</span>
+            </a>
+        </div>
+
+        <!-- Scrollable Message Thread -->
+        <div id="chat-messages-container" class="flex-grow p-4 overflow-y-auto space-y-3.5 bg-slate-50/50 dark:bg-slate-950/50 text-xs">
+            
+            <!-- Default Welcome Bot Message -->
+            <div class="flex items-start gap-2 max-w-[90%]">
+                <div class="w-6 h-6 rounded-lg bg-[#0e244d] text-amber-300 flex-shrink-0 flex items-center justify-center text-xs shadow-sm font-black">
+                    🤖
+                </div>
+                <div class="bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 p-3 rounded-2xl rounded-tr-none border border-slate-200/80 dark:border-slate-700 shadow-sm leading-relaxed">
+                    <p class="font-black text-[#0e244d] dark:text-amber-300 mb-1">أهلاً بك في فضاء جمعية مبادرات بلا حدود بالدروة! 🌟</p>
+                    <p>أنا مساعدك الذكي للإجابة عن استفساراتك بخصوص أهداف الجمعية، الأنشطة الميدانية، شروط الانخراط، واقتراح المبادرات. كيف يمكنني إفادتك اليوم؟</p>
+                </div>
+            </div>
+
+            <!-- Quick Starter Chips -->
+            <div id="quick-starter-chips" class="pt-1 flex flex-wrap gap-1.5">
+                <button type="button" class="quick-chip bg-white dark:bg-slate-800 hover:bg-[#0e244d] hover:text-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1 text-[11px] font-bold shadow-xs transition cursor-pointer" data-prompt="كيف يمكنني الانخراط في الجمعية وما هي الشروط؟">
+                    📝 كيف أنخرط في الجمعية؟
+                </button>
+                <button type="button" class="quick-chip bg-white dark:bg-slate-800 hover:bg-[#0e244d] hover:text-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1 text-[11px] font-bold shadow-xs transition cursor-pointer" data-prompt="ما هي أبرز الأنشطة والمبادرات الميدانية المنجزة بالدروة؟">
+                    🌟 أبرز الأنشطة المنجزة؟
+                </button>
+                <button type="button" class="quick-chip bg-white dark:bg-slate-800 hover:bg-[#0e244d] hover:text-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1 text-[11px] font-bold shadow-xs transition cursor-pointer" data-prompt="أين يقع مقر الجمعية وكيف أتواصل معكم؟">
+                    📍 أين مقر الجمعية والتواصل؟
+                </button>
+                <button type="button" class="quick-chip bg-white dark:bg-slate-800 hover:bg-[#0e244d] hover:text-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1 text-[11px] font-bold shadow-xs transition cursor-pointer" data-prompt="كيف أقترح مبادرة أو فكرة مشروع للتصويت؟">
+                    💡 كيف أقترح مبادرة مجتمعية؟
+                </button>
+            </div>
+
+            <!-- Typing Indicator (Hidden by default) -->
+            <div id="chat-typing-indicator" class="hidden flex items-center gap-2 text-slate-400">
+                <div class="w-6 h-6 rounded-lg bg-[#0e244d] text-amber-300 flex-shrink-0 flex items-center justify-center text-xs shadow-sm">
+                    🤖
+                </div>
+                <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-2 rounded-2xl rounded-tr-none flex items-center gap-1.5 shadow-sm">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-bounce" style="animation-delay: 0s"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-bounce" style="animation-delay: 0.2s"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-bounce" style="animation-delay: 0.4s"></span>
+                    <span class="text-[10px] font-bold text-slate-400 mr-1">المساعد يفكر...</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Input Box & Actions -->
+        <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+            <form id="chatbot-form" class="flex items-center gap-2">
+                <input type="text" id="chat-user-input" placeholder="اكتب سؤالك هنا عن الجمعية..." autocomplete="off" class="flex-grow bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 text-xs px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-[#0e244d] dark:focus:border-amber-400 transition">
+                <button type="submit" id="chat-send-btn" class="bg-[#0e244d] hover:bg-blue-900 text-amber-300 p-2.5 rounded-xl font-bold text-sm shadow-md hover:scale-105 active:scale-95 transition flex-shrink-0" title="إرسال" aria-label="Send">
+                    ➤
+                </button>
+            </form>
+            <div class="mt-1.5 flex items-center justify-between text-[10px] text-slate-400 px-1">
+                <span>مدعوم بنماذج Google Gemini</span>
+                <span id="chat-char-count">0 / 400</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Chatbot Client Script with Multi-Turn History -->
+<script>
+(function() {
+    const root = document.getElementById('asld-chatbot-root');
+    if (!root) return;
+
+    const toggleBtn = document.getElementById('chatbot-toggle-btn');
+    const windowPane = document.getElementById('chatbot-window');
+    const closeBtn = document.getElementById('chat-close-btn');
+    const resetBtn = document.getElementById('chat-reset-btn');
+    const form = document.getElementById('chatbot-form');
+    const input = document.getElementById('chat-user-input');
+    const messagesContainer = document.getElementById('chat-messages-container');
+    const typingIndicator = document.getElementById('chat-typing-indicator');
+    const modelSelect = document.getElementById('chat-model-select');
+    const charCount = document.getElementById('chat-char-count');
+
+    // Conversation history maintenance for multi-turn chat
+    let conversationHistory = [];
+
+    // Load from sessionStorage if available
+    try {
+        const saved = sessionStorage.getItem('asld_chat_history');
+        if (saved) {
+            conversationHistory = JSON.parse(saved);
+        }
+    } catch (e) {}
+
+    // Toggle Chat window open/close
+    toggleBtn.addEventListener('click', () => {
+        const isHidden = windowPane.classList.contains('hidden');
+        if (isHidden) {
+            windowPane.classList.remove('hidden');
+            toggleBtn.classList.add('hidden');
+            input.focus();
+            scrollToBottom();
+        }
+    });
+
+    closeBtn.addEventListener('click', () => {
+        windowPane.classList.add('hidden');
+        toggleBtn.classList.remove('hidden');
+    });
+
+    // Reset Chat
+    resetBtn.addEventListener('click', () => {
+        if (confirm('هل ترغب في بدء محادثة جديدة وتصفير التاريخ السابق؟')) {
+            conversationHistory = [];
+            sessionStorage.removeItem('asld_chat_history');
+            // Remove user and bot messages except initial welcome
+            const dynamicMsgs = messagesContainer.querySelectorAll('.dynamic-chat-msg');
+            dynamicMsgs.forEach(el => el.remove());
+            const chips = document.getElementById('quick-starter-chips');
+            if (chips) chips.classList.remove('hidden');
+            scrollToBottom();
+        }
+    });
+
+    // Character counter
+    input.addEventListener('input', () => {
+        if (charCount) {
+            charCount.textContent = `${input.value.length} / 400`;
+        }
+    });
+
+    // Quick chips click handler
+    document.querySelectorAll('.quick-chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const prompt = btn.getAttribute('data-prompt');
+            if (prompt) {
+                input.value = prompt;
+                const chips = document.getElementById('quick-starter-chips');
+                if (chips) chips.classList.add('hidden');
+                form.dispatchEvent(new Event('submit'));
+            }
+        });
+    });
+
+    function scrollToBottom() {
+        setTimeout(() => {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }, 50);
+    }
+
+    // Format markdown-like text to safe HTML
+    function formatMessageText(text) {
+        if (!text) return '';
+        let escaped = text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        
+        // Bold **text**
+        escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-[#0e244d] dark:text-amber-300">$1</strong>');
+        // Bullet points
+        escaped = escaped.replace(/(?:^|\n)[-•*]\s*(.*?)(?=\n|$)/g, '<li class="my-1 mr-3 list-disc">$1</li>');
+        // Links [title](url)
+        escaped = escaped.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" class="text-blue-600 dark:text-amber-400 underline font-bold hover:text-blue-800" target="_blank" rel="noopener">$1</a>');
+        // New lines
+        escaped = escaped.replace(/\n\n/g, '<p class="my-1.5"></p>').replace(/\n/g, '<br>');
+        return escaped;
+    }
+
+    // Render User Bubble
+    function appendUserMessage(text) {
+        const div = document.createElement('div');
+        div.className = 'dynamic-chat-msg flex items-start justify-end gap-2 max-w-[90%] ms-auto';
+        div.innerHTML = `
+            <div class="bg-[#0e244d] text-white p-3 rounded-2xl rounded-tl-none shadow-sm leading-relaxed">
+                <p class="font-medium">${formatMessageText(text)}</p>
+            </div>
+            <div class="w-6 h-6 rounded-lg bg-amber-400 text-slate-900 flex-shrink-0 flex items-center justify-center text-xs font-black shadow-sm">
+                👤
+            </div>
+        `;
+        messagesContainer.insertBefore(div, typingIndicator);
+        scrollToBottom();
+    }
+
+    // Render Bot Bubble
+    function appendBotMessage(text, modelUsed) {
+        const div = document.createElement('div');
+        div.className = 'dynamic-chat-msg flex items-start gap-2 max-w-[90%]';
+        div.innerHTML = `
+            <div class="w-6 h-6 rounded-lg bg-[#0e244d] text-amber-300 flex-shrink-0 flex items-center justify-center text-xs shadow-sm font-black">
+                🤖
+            </div>
+            <div class="bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 p-3 rounded-2xl rounded-tr-none border border-slate-200/80 dark:border-slate-700 shadow-sm leading-relaxed">
+                <div class="text-[11.5px] leading-relaxed">${formatMessageText(text)}</div>
+                ${modelUsed ? `<div class="mt-1.5 text-[9px] text-slate-400 font-bold border-t border-slate-100 dark:border-slate-700 pt-1 flex items-center justify-between">
+                    <span>ASLD Bot</span>
+                    <span>${modelUsed}</span>
+                </div>` : ''}
+            </div>
+        `;
+        messagesContainer.insertBefore(div, typingIndicator);
+        scrollToBottom();
+    }
+
+    // Restore prior conversation history in UI
+    if (conversationHistory.length > 0) {
+        const chips = document.getElementById('quick-starter-chips');
+        if (chips) chips.classList.add('hidden');
+        conversationHistory.forEach(item => {
+            if (item.role === 'user') {
+                appendUserMessage(item.content);
+            } else if (item.role === 'model') {
+                appendBotMessage(item.content, '');
+            }
+        });
+    }
+
+    // Handle Form Submit
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const text = (input.value || '').trim();
+        if (!text) return;
+
+        // Hide chips on interaction
+        const chips = document.getElementById('quick-starter-chips');
+        if (chips) chips.classList.add('hidden');
+
+        // Append user msg to UI & history
+        appendUserMessage(text);
+        conversationHistory.push({ role: 'user', content: text });
+        
+        // Clear input
+        input.value = '';
+        if (charCount) charCount.textContent = '0 / 400';
+
+        // Show typing indicator
+        typingIndicator.classList.remove('hidden');
+        scrollToBottom();
+
+        const selectedModel = modelSelect ? modelSelect.value : 'gemini-3.5-flash';
+
+        try {
+            const resp = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    messages: conversationHistory,
+                    model: selectedModel
+                })
+            });
+
+            const data = await resp.json();
+            typingIndicator.classList.add('hidden');
+
+            if (data && data.reply) {
+                appendBotMessage(data.reply, data.modelUsed);
+                conversationHistory.push({ role: 'model', content: data.reply });
+                // Keep max 20 turns
+                if (conversationHistory.length > 20) {
+                    conversationHistory = conversationHistory.slice(conversationHistory.length - 20);
+                }
+                try {
+                    sessionStorage.setItem('asld_chat_history', JSON.stringify(conversationHistory));
+                } catch (e) {}
+            } else {
+                appendBotMessage('عذراً، حدث خطأ مؤقت في الاتصال. يمكنك إعادة طرح السؤال أو تصفح أقسام الموقع.', 'Error');
+            }
+        } catch (err) {
+            console.error('Chat error:', err);
+            typingIndicator.classList.add('hidden');
+            appendBotMessage('مرحباً بك! للاستفسارات المستعجلة، يمكنك مراسلتنا مباشرة عبر صفحة اتصل بنا أو صفحتنا الرسمية على فيسبوك.', 'Offline');
+        }
+    });
+
+})();
+</script>

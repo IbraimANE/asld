@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="<%= currentLang %>" dir="<%= lang.direction %>">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المساعد الذكي التفاعلي | جمعية مبادرات بلا حدود - ASLD</title>
+    <meta name="description" content="المساعد الذكي الرسمي لجمعية مبادرات بلا حدود بمدينة الدروة - استفسر عن الانخراط، الأنشطة، والمبادرات التنموية عبر نماذج Google Gemini.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Cairo', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="/css/custom.css">
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans antialiased transition-colors">
+
+    <%- include('partials/nav') %>
+
+    <main class="flex-grow container mx-auto px-4 py-8 max-w-5xl">
+        
+        <!-- Header Banner -->
+        <div class="mb-8 text-center" data-aos="fade-up">
+            <span class="section-badge-clean">
+                <span>🤖</span>
+                <span>Powered by Google Gemini</span>
+            </span>
+            <h1 class="text-3xl md:text-4xl font-black text-[#0e244d] dark:text-white mt-3">المساعد الذكي لجمعية مبادرات بلا حدود</h1>
+            <p class="text-slate-500 dark:text-slate-400 text-sm md:text-base max-w-2xl mx-auto mt-2">
+                محاورك الرقمي التفاعلي للإجابة عن أسئلتك حول أنشطة الجمعية بالدروة، برامج التمكين، طلب الانخراط، والمبادرات التشاركية.
+            </p>
+            <div class="clean-divider">
+                <div class="clean-divider-line"></div>
+                <div class="clean-divider-diamond"></div>
+                <div class="clean-divider-line"></div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            
+            <!-- Sidebar: Information & Quick Prompt Templates -->
+            <div class="lg:col-span-1 space-y-4">
+                
+                <!-- Association Snapshot Card -->
+                <div class="clean-card p-5">
+                    <div class="flex items-center gap-3 mb-3">
+                        <img src="/image/logo_assoc.jpg" alt="Logo" class="w-10 h-10 object-contain rounded-lg bg-white p-0.5 border border-slate-200">
+                        <div>
+                            <h3 class="font-black text-sm text-[#0e244d] dark:text-white">مبادرات بلا حدود</h3>
+                            <span class="text-[10px] text-amber-600 dark:text-amber-400 font-bold">مدينة الدروة - برشيد</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-3">
+                        جمعية مدنية تنموية تهدف إلى التنمية البشرية والتمكين الاجتماعي والبيئي ومواكبة الساكنة.
+                    </p>
+                    <div class="text-[11px] font-bold space-y-1.5 text-slate-600 dark:text-slate-300 border-t border-slate-100 dark:border-slate-800 pt-2.5">
+                        <div class="flex items-center justify-between">
+                            <span>الحالة:</span>
+                            <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                <span>متصل 24/7</span>
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span>الانخراط:</span>
+                            <span class="text-amber-600 dark:text-amber-400 font-black">100 درهم/سنة</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Prompts Library -->
+                <div class="clean-card p-5">
+                    <h4 class="font-black text-xs text-[#0e244d] dark:text-amber-300 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                        <span>💡</span>
+                        <span>أسئلة شائعة جاهزة</span>
+                    </h4>
+                    <div class="space-y-2">
+                        <button type="button" class="page-quick-prompt text-right w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-[#0e244d] hover:text-white text-slate-700 dark:text-slate-300 text-xs font-bold transition border border-slate-200/60 dark:border-slate-700/60 leading-snug cursor-pointer" data-text="كيف أنخرط في جمعية مبادرات بلا حدود وما هي الشروط؟">
+                            📝 كيف أنخرط في الجمعية؟
+                        </button>
+                        <button type="button" class="page-quick-prompt text-right w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-[#0e244d] hover:text-white text-slate-700 dark:text-slate-300 text-xs font-bold transition border border-slate-200/60 dark:border-slate-700/60 leading-snug cursor-pointer" data-text="ما هي أبرز الأنشطة الميدانية التي نظمتها الجمعية بالدروة؟">
+                            🌟 أنشطة الجمعية الميدانية المنجزة
+                        </button>
+                        <button type="button" class="page-quick-prompt text-right w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-[#0e244d] hover:text-white text-slate-700 dark:text-slate-300 text-xs font-bold transition border border-slate-200/60 dark:border-slate-700/60 leading-snug cursor-pointer" data-text="حدثني عن حملة النظافة والتشجير الكبرى بحي جوهرة؟">
+                            🌳 حملة التشجير بحي جوهرة
+                        </button>
+                        <button type="button" class="page-quick-prompt text-right w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-[#0e244d] hover:text-white text-slate-700 dark:text-slate-300 text-xs font-bold transition border border-slate-200/60 dark:border-slate-700/60 leading-snug cursor-pointer" data-text="ما هو مشروع المركز السوسيو-اقتصادي والتأهيلي بالدروة؟">
+                            🏢 المركز السوسيو-اقتصادي
+                        </button>
+                        <button type="button" class="page-quick-prompt text-right w-full p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-[#0e244d] hover:text-white text-slate-700 dark:text-slate-300 text-xs font-bold transition border border-slate-200/60 dark:border-slate-700/60 leading-snug cursor-pointer" data-text="كيف أقترح مبادرة مجتمعية ليصوت عليها المنخرطون؟">
+                            🗳️ اقتراح مبادرة وتصويت الأعضاء
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Main Chat Room Card -->
+            <div class="lg:col-span-3 clean-card flex flex-col h-[650px] overflow-hidden">
+                
+                <!-- Chat Room Controls Bar -->
+                <div class="p-4 bg-slate-100/80 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-[#0e244d] text-amber-300 flex items-center justify-center font-bold text-sm shadow">
+                            🤖
+                        </div>
+                        <div>
+                            <h2 class="font-black text-xs md:text-sm text-[#0e244d] dark:text-white">محادثة تفاعلية متعددة الجولات</h2>
+                            <p class="text-[11px] text-slate-400">يحفظ سياق الحديث طوال الجلسة</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <label class="text-xs font-bold text-slate-500 hidden sm:inline">النموذج:</label>
+                        <select id="page-model-select" class="bg-white dark:bg-slate-800 text-slate-800 dark:text-amber-300 text-xs font-bold py-1.5 px-3 rounded-xl border border-slate-300 dark:border-slate-700 shadow-sm focus:outline-none">
+                            <option value="gemini-3.5-flash" selected>Gemini 3.5 Flash (مهام عامة وشاملة)</option>
+                            <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash-Lite (استجابة سريعة فائقة)</option>
+                            <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro (تحليل دراسات ومشاريع معقدة)</option>
+                        </select>
+                        <button type="button" id="page-reset-chat" class="p-2 rounded-xl bg-white dark:bg-slate-800 hover:bg-amber-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold border border-slate-200 dark:border-slate-700 transition" title="بدء محادثة جديدة">
+                            🔄 مسح
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Messages Thread -->
+                <div id="page-chat-thread" class="flex-grow p-5 overflow-y-auto space-y-4 bg-slate-50/40 dark:bg-slate-950/40">
+                    
+                    <!-- Bot Welcome Bubble -->
+                    <div class="flex items-start gap-3 max-w-[85%]">
+                        <div class="w-8 h-8 rounded-xl bg-[#0e244d] text-amber-300 flex-shrink-0 flex items-center justify-center text-sm shadow font-black">
+                            🤖
+                        </div>
+                        <div class="bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 p-4 rounded-2xl rounded-tr-none border border-slate-200/80 dark:border-slate-700 shadow-sm leading-relaxed text-xs md:text-sm">
+                            <p class="font-black text-[#0e244d] dark:text-amber-300 mb-1.5 text-sm">مرحباً بك في المنصة الذكية لجمعية مبادرات بلا حدود بالدروة! 🇲🇦</p>
+                            <p>أنا المساعد الذكي المُخصص للإجابة عن جميع استفساراتك حول برامجنا التعليمية، أنشطتنا البيئية بحي جوهرة، الاحتفال بالذكرى 50 للمسيرة الخضراء، طلبات الانخراط، والتصويت التشاركي. كيف أستطيع خدمتك؟</p>
+                        </div>
+                    </div>
+
+                    <!-- Typing Indicator -->
+                    <div id="page-typing-indicator" class="hidden flex items-center gap-3 text-slate-400">
+                        <div class="w-8 h-8 rounded-xl bg-[#0e244d] text-amber-300 flex-shrink-0 flex items-center justify-center text-sm shadow">
+                            🤖
+                        </div>
+                        <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2.5 rounded-2xl rounded-tr-none flex items-center gap-2 shadow-sm">
+                            <span class="w-2 h-2 rounded-full bg-amber-500 animate-bounce" style="animation-delay: 0s"></span>
+                            <span class="w-2 h-2 rounded-full bg-amber-500 animate-bounce" style="animation-delay: 0.2s"></span>
+                            <span class="w-2 h-2 rounded-full bg-amber-500 animate-bounce" style="animation-delay: 0.4s"></span>
+                            <span class="text-xs font-bold text-slate-400 mr-2">جاري توليد الإجابة عبر Gemini...</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Input Footer -->
+                <div class="p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+                    <form id="page-chat-form" class="flex items-center gap-2.5">
+                        <input type="text" id="page-chat-input" placeholder="اطرح سؤالك هنا بكل حرية..." autocomplete="off" class="flex-grow bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 text-sm px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-[#0e244d] dark:focus:border-amber-400 transition shadow-inner">
+                        <button type="submit" class="btn-solid-navy px-6 py-3 rounded-xl font-black text-sm text-amber-300 shadow-md hover:scale-105 transition flex items-center gap-2">
+                            <span>إرسال</span>
+                            <span>➤</span>
+                        </button>
+                    </form>
+                    <div class="mt-2 flex items-center justify-between text-[11px] text-slate-400 px-1">
+                        <span>محادثة مشفرة ومؤمنة خادمياً - لن يتم تسريب أي مفاتيح برمجية للمتصفح.</span>
+                        <span id="page-char-count">0 / 400</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <%- include('partials/footer') %>
+
+    <!-- Include the floating widget everywhere as well -->
+    <%- include('partials/chatbot_widget') %>
+
+    <script>
+    (function() {
+        const form = document.getElementById('page-chat-form');
+        const input = document.getElementById('page-chat-input');
+        const thread = document.getElementById('page-chat-thread');
+        const typing = document.getElementById('page-typing-indicator');
+        const modelSelect = document.getElementById('page-model-select');
+        const resetBtn = document.getElementById('page-reset-chat');
+        const charCount = document.getElementById('page-char-count');
+        const promptBtns = document.querySelectorAll('.page-quick-prompt');
+
+        let history = [];
+
+        try {
+            const saved = sessionStorage.getItem('asld_chat_history');
+            if (saved) {
+                history = JSON.parse(saved);
+            }
+        } catch (e) {}
+
+        function scrollToBottom() {
+            setTimeout(() => {
+                thread.scrollTop = thread.scrollHeight;
+            }, 50);
+        }
+
+        function formatMessageText(text) {
+            if (!text) return '';
+            let escaped = text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+            escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-[#0e244d] dark:text-amber-300">$1</strong>');
+            escaped = escaped.replace(/(?:^|\n)[-•*]\s*(.*?)(?=\n|$)/g, '<li class="my-1 mr-4 list-disc">$1</li>');
+            escaped = escaped.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" class="text-blue-600 dark:text-amber-400 underline font-bold hover:text-blue-800" target="_blank" rel="noopener">$1</a>');
+            escaped = escaped.replace(/\n\n/g, '<p class="my-2"></p>').replace(/\n/g, '<br>');
+            return escaped;
+        }
+
+        function appendUserMessage(text) {
+            const div = document.createElement('div');
+            div.className = 'page-dyn-msg flex items-start justify-end gap-3 max-w-[85%] ms-auto';
+            div.innerHTML = `
+                <div class="bg-[#0e244d] text-white p-4 rounded-2xl rounded-tl-none shadow-sm leading-relaxed text-xs md:text-sm">
+                    <p class="font-medium">${formatMessageText(text)}</p>
+                </div>
+                <div class="w-8 h-8 rounded-xl bg-amber-400 text-slate-950 flex-shrink-0 flex items-center justify-center text-sm font-black shadow">
+                    👤
+                </div>
+            `;
+            thread.insertBefore(div, typing);
+            scrollToBottom();
+        }
+
+        function appendBotMessage(text, modelUsed) {
+            const div = document.createElement('div');
+            div.className = 'page-dyn-msg flex items-start gap-3 max-w-[85%]';
+            div.innerHTML = `
+                <div class="w-8 h-8 rounded-xl bg-[#0e244d] text-amber-300 flex-shrink-0 flex items-center justify-center text-sm shadow font-black">
+                    🤖
+                </div>
+                <div class="bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 p-4 rounded-2xl rounded-tr-none border border-slate-200/80 dark:border-slate-700 shadow-sm leading-relaxed text-xs md:text-sm">
+                    <div>${formatMessageText(text)}</div>
+                    ${modelUsed ? `<div class="mt-2 text-[10px] text-slate-400 font-bold border-t border-slate-100 dark:border-slate-700 pt-1.5 flex items-center justify-between">
+                        <span>ASLD Assistant</span>
+                        <span class="bg-slate-100 dark:bg-slate-900 px-2 py-0.5 rounded">${modelUsed}</span>
+                    </div>` : ''}
+                </div>
+            `;
+            thread.insertBefore(div, typing);
+            scrollToBottom();
+        }
+
+        if (history.length > 0) {
+            history.forEach(item => {
+                if (item.role === 'user') appendUserMessage(item.content);
+                else if (item.role === 'model') appendBotMessage(item.content, '');
+            });
+        }
+
+        input.addEventListener('input', () => {
+            if (charCount) charCount.textContent = `${input.value.length} / 400`;
+        });
+
+        promptBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const q = btn.getAttribute('data-text');
+                if (q) {
+                    input.value = q;
+                    form.dispatchEvent(new Event('submit'));
+                }
+            });
+        });
+
+        resetBtn.addEventListener('click', () => {
+            if (confirm('تأكيد مسح المحادثة وبدء جلسة جديدة؟')) {
+                history = [];
+                sessionStorage.removeItem('asld_chat_history');
+                document.querySelectorAll('.page-dyn-msg').forEach(el => el.remove());
+                scrollToBottom();
+            }
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const q = (input.value || '').trim();
+            if (!q) return;
+
+            appendUserMessage(q);
+            history.push({ role: 'user', content: q });
+
+            input.value = '';
+            if (charCount) charCount.textContent = '0 / 400';
+
+            typing.classList.remove('hidden');
+            scrollToBottom();
+
+            const model = modelSelect ? modelSelect.value : 'gemini-3.5-flash';
+
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        messages: history,
+                        model: model
+                    })
+                });
+
+                const data = await res.json();
+                typing.classList.add('hidden');
+
+                if (data && data.reply) {
+                    appendBotMessage(data.reply, data.modelUsed);
+                    history.push({ role: 'model', content: data.reply });
+                    if (history.length > 20) history = history.slice(history.length - 20);
+                    try {
+                        sessionStorage.setItem('asld_chat_history', JSON.stringify(history));
+                    } catch (e) {}
+                } else {
+                    appendBotMessage('عذراً، حدث انقطاع مؤقت في الاتصال. يمكنك إعادة المحاولة.', 'Error');
+                }
+            } catch (err) {
+                console.error(err);
+                typing.classList.add('hidden');
+                appendBotMessage('نحن هنا لخدمتك! يمكنك زيارة صفحة اتصل بنا للتواصل المباشر مع مكتب الجمعية.', 'Offline');
+            }
+        });
+    })();
+    </script>
+</body>
+</html>

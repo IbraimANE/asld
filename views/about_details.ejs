@@ -8,22 +8,37 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="/custom.css">
-    <style>
-        body { font-family: 'Tajawal', sans-serif; scroll-behavior: smooth; background-color: #f0f4f8; overflow-x: hidden; }
-    </style>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
 </head>
-<body class="text-gray-800">
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors">
 
     <%- include('partials/nav') %>
 
-    <main class="py-20 container mx-auto px-6 max-w-4xl">
-        <article data-aos="fade-up" class="bg-white p-12 rounded-[2.5rem] shadow-xl shadow-blue-900/5 border border-gray-100">
-            <h1 class="text-4xl font-black text-blue-900 mb-8 pb-4 border-b-2 border-yellow-400 inline-block"><%= lang.about_page_title %></h1>
+    <main class="py-16 container mx-auto px-6 max-w-4xl">
+        <article data-aos="fade-up" class="clean-card p-8 md:p-12 relative overflow-hidden">
+            <div class="brand-accent-line absolute top-0 left-0 right-0"></div>
             
-            <div class="space-y-8 text-gray-700 text-lg leading-relaxed text-justify">
+            <div class="mb-8">
+                <span class="section-badge-clean">
+                    <span>🏛️</span>
+                    <span>Institutional Profile</span>
+                </span>
+                <h1 class="text-3xl md:text-4xl font-black text-[#0e244d] dark:text-white mt-3 mb-2"><%= lang.about_page_title %></h1>
+                <div class="clean-divider">
+                    <div class="clean-divider-line"></div>
+                    <div class="clean-divider-diamond"></div>
+                    <div class="clean-divider-line"></div>
+                </div>
+            </div>
+            
+            <div class="space-y-8 text-slate-700 dark:text-slate-300 text-base md:text-lg leading-relaxed text-justify">
                 
                 <div>
-                    <h3 class="text-2xl font-black text-blue-950 mb-3"><%= currentLang === 'en' ? 'Identity & Establishment' : 'الهوية والتأسيس' %></h3>
+                    <h3 class="text-xl md:text-2xl font-black text-[#0e244d] dark:text-amber-400 mb-2"><%= currentLang === 'en' ? 'Identity & Establishment' : 'الهوية والتأسيس' %></h3>
                     <p>
                         <%= currentLang === 'en' 
                             ? '"Boundless Initiatives" is a Moroccan civil organization founded in 2025 in Deroua, Berrechid Province. The association operates in accordance with the laws regulating associations in the Kingdom of Morocco, and is headquartered at the Deroua Youth Center, with ambitions to expand through national and international partnerships.' 
@@ -32,7 +47,7 @@
                 </div>
 
                 <div>
-                    <h3 class="text-2xl font-black text-blue-950 mb-3"><%= currentLang === 'en' ? 'Mission & Objectives' : 'الرسالة والأهداف' %></h3>
+                    <h3 class="text-xl md:text-2xl font-black text-[#0e244d] dark:text-amber-400 mb-2"><%= currentLang === 'en' ? 'Mission & Objectives' : 'الرسالة والأهداف' %></h3>
                     <p>
                         <%= currentLang === 'en' 
                             ? 'The association is committed to achieving human and sustainable development by empowering vulnerable groups, particularly youth, women, and children. Our vision focuses on enhancing social and economic inclusion through vocational training, social accompaniment, and environmental action.' 
@@ -41,38 +56,38 @@
                 </div>
 
                 <div>
-                    <h3 class="text-2xl font-black text-blue-950 mb-3"><%= currentLang === 'en' ? 'Programs & Field Interventions' : 'البرامج والتدخلات الميدانية' %></h3>
+                    <h3 class="text-xl md:text-2xl font-black text-[#0e244d] dark:text-amber-400 mb-2"><%= currentLang === 'en' ? 'Programs & Field Interventions' : 'البرامج والتدخلات الميدانية' %></h3>
                     <p class="mb-4"><%= currentLang === 'en' ? 'The association works through practical tracks including:' : 'تعمل الجمعية عبر مسارات عملية تشمل:' %></p>
                     <ul class="space-y-4 <%= currentLang === 'en' ? 'pl-2' : 'pr-2' %>">
-                        <li class="flex items-start gap-2">
-                            <span class="text-yellow-500 font-black mt-1">▪</span>
+                        <li class="flex items-start gap-3">
+                            <span class="text-amber-500 font-black mt-1">▪</span>
                             <div>
-                                <strong class="text-blue-900"><%= currentLang === 'en' ? 'Education & Training:' : 'التربية والتكوين:' %></strong> <%= currentLang === 'en' ? 'Providing educational support classes and combating school dropouts.' : 'تقديم دروس الدعم التربوي ومحاربة الهدر المدرسي.' %>
+                                <strong class="text-[#0e244d] dark:text-white"><%= currentLang === 'en' ? 'Education & Training:' : 'التربية والتكوين:' %></strong> <%= currentLang === 'en' ? 'Providing educational support classes and combating school dropouts.' : 'تقديم دروس الدعم التربوي ومحاربة الهدر المدرسي.' %>
                             </div>
                         </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-yellow-500 font-black mt-1">▪</span>
+                        <li class="flex items-start gap-3">
+                            <span class="text-amber-500 font-black mt-1">▪</span>
                             <div>
-                                <strong class="text-blue-900"><%= currentLang === 'en' ? 'Vocational Qualification:' : 'التأهيل المهني:' %></strong> <%= currentLang === 'en' ? 'Organizing training courses for youth and women to enhance their employability.' : 'تنظيم دورات تكوينية لفائدة الشباب والنساء لتعزيز قدراتهم التشغيلية.' %>
+                                <strong class="text-[#0e244d] dark:text-white"><%= currentLang === 'en' ? 'Vocational Qualification:' : 'التأهيل المهني:' %></strong> <%= currentLang === 'en' ? 'Organizing training courses for youth and women to enhance their employability.' : 'تنظيم دورات تكوينية لفائدة الشباب والنساء لتعزيز قدراتهم التشغيلية.' %>
                             </div>
                         </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-yellow-500 font-black mt-1">▪</span>
+                        <li class="flex items-start gap-3">
+                            <span class="text-amber-500 font-black mt-1">▪</span>
                             <div>
-                                <strong class="text-blue-900"><%= currentLang === 'en' ? 'Social Accompaniment:' : 'المواكبة الاجتماعية:' %></strong> <%= currentLang === 'en' ? 'Providing listening, guidance, and field support spaces.' : 'توفير فضاءات للاستماع والتوجيه والدعم الميداني.' %>
+                                <strong class="text-[#0e244d] dark:text-white"><%= currentLang === 'en' ? 'Social Accompaniment:' : 'المواكبة الاجتماعية:' %></strong> <%= currentLang === 'en' ? 'Providing listening, guidance, and field support spaces.' : 'توفير فضاءات للاستماع والتوجيه والدعم الميداني.' %>
                             </div>
                         </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-yellow-500 font-black mt-1">▪</span>
+                        <li class="flex items-start gap-3">
+                            <span class="text-amber-500 font-black mt-1">▪</span>
                             <div>
-                                <strong class="text-blue-900"><%= currentLang === 'en' ? 'Sustainability & Sports:' : 'الاستدامة والرياضة:' %></strong> <%= currentLang === 'en' ? 'Supporting and organizing environmental awareness activities, cultural and sports initiatives for various groups.' : 'دعم وتنظيم أنشطة بيئية تحسيسية ومبادرات ثقافية ورياضية لمختلف الفئات.' %>
+                                <strong class="text-[#0e244d] dark:text-white"><%= currentLang === 'en' ? 'Sustainability & Sports:' : 'الاستدامة والرياضة:' %></strong> <%= currentLang === 'en' ? 'Supporting and organizing environmental awareness activities, cultural and sports initiatives for various groups.' : 'دعم وتنظيم أنشطة بيئية تحسيسية ومبادرات ثقافية ورياضية لمختلف الفئات.' %>
                             </div>
                         </li>
                     </ul>
                 </div>
 
                 <div>
-                    <h3 class="text-2xl font-black text-blue-950 mb-3"><%= currentLang === 'en' ? 'Partnerships & Financial Sustainability' : 'الشراكات والاستدامة المالية' %></h3>
+                    <h3 class="text-xl md:text-2xl font-black text-[#0e244d] dark:text-amber-400 mb-2"><%= currentLang === 'en' ? 'Partnerships & Financial Sustainability' : 'الشراكات والاستدامة المالية' %></h3>
                     <p>
                         <%= currentLang === 'en' 
                             ? 'The association believes in the importance of opening up to government sectors, local authorities, and the private sector to develop projects with sustainable impact. It relies on member contributions, public support, and self-developed developmental partnerships to ensure the continuity of its programs.' 
@@ -81,20 +96,20 @@
                 </div>
 
                 <div>
-                    <h3 class="text-2xl font-black text-blue-950 mb-3"><%= lang.about_vision_title %></h3>
+                    <h3 class="text-xl md:text-2xl font-black text-[#0e244d] dark:text-amber-400 mb-2"><%= lang.about_vision_title %></h3>
                     <p>
                         <%= lang.about_vision_desc %>
                     </p>
                 </div>
 
-                <div class="<%= currentLang === 'en' ? 'border-l-4 pl-6' : 'border-r-4 pr-6' %> bg-blue-50 p-6 rounded-2xl border-blue-900 italic font-medium text-blue-950">
+                <div class="<%= currentLang === 'en' ? 'border-l-4 pl-6' : 'border-r-4 pr-6' %> bg-amber-50/60 dark:bg-slate-800/60 border-amber-500 p-6 rounded-2xl italic font-medium text-slate-900 dark:text-amber-100">
                     <%= lang.about_royal_quote %>
                 </div>
 
             </div>
 
-            <div class="mt-12 pt-6 border-t border-gray-100 flex justify-end">
-                <a href="/index.php" class="bg-blue-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-800 transition-colors shadow-md"><%= lang.back_home %></a>
+            <div class="mt-12 pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-end">
+                <a href="/index.php" class="btn-solid-navy px-8 py-3 rounded-xl font-bold text-sm shadow-sm"><%= lang.back_home %></a>
             </div>
         </article>
     </main>
