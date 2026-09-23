@@ -121,9 +121,9 @@ app.use((req, res, next) => {
   next();
 });
 
-// Image fallback route for president
-app.get(['/image/president.jpg'], (req, res) => {
-  res.redirect('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&fit=crop&q=80');
+// Image route for president
+app.get(['/image/president.jpg', '/image/president_elghrabi.jpg'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/image/president.jpg'));
 });
 
 // Home Page
